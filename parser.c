@@ -14,8 +14,8 @@
 
 #define BUFF 1080
 
-static unsigned short LC = 0x0000; /* ROM */
-static unsigned short byte_buff = 0x0000;
+static unsigned short LC = 0x0000; /* address counter for label operands */
+static unsigned short byte_buff = 0x0000;/* buffer to keep binary field */
 static unsigned short RAM_ADDR = 0x0010; /* RAM[16] */
 
 struct C_INS _instructions[] = {
@@ -68,13 +68,16 @@ struct C_INS _instructions[] = {
 
 void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
     char buff[BUFF],clean_buff[100];
+    FILE *int_file;
     char *temp;
 
     INT_FILE_NAME(file_name);
-    FILE *int_file = fopen(file_name, "w");
+    // create intermediate file
+    int_file = fopen(file_name, "w");
     while (fgets(buff, sizeof(buff), src_file) != NULL) {
-        /* ROM */
+        // increase ROM address
         ++LC;
+        // ignore comments,spaces
         if (*buff == '/') continue;
         if (*buff == '\r') continue;
         if (*buff == '\n') continue;
@@ -85,15 +88,15 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
         CLEAN_OPERAND(temp, clean_buff);
         switch (buff[0]) {
             case '(':
-                //(LOOP)
+                // (LOOP)
                 insert(sym_tbl, temp, ++LC);
                 break;
             case '@':
-                //@2
+                // @2
                 if (isdigit(temp[0])) {
                     break;
                 } else {
-                    //@i
+                    // @i
                     if (islower(temp[0]))
                         insert(sym_tbl, temp, RAM_ADDR++);
                 }
@@ -114,7 +117,7 @@ void processor(char *file_name, struct Symbol **sym_tbl) {
 
     FILE *src_file;
     FILE *bin_file;
-
+    // file operations
     src_file = fopen(file_name, "r");
     REMOVE_EXT(file_name);
     BIN_FILE(file_name);
@@ -123,14 +126,13 @@ void processor(char *file_name, struct Symbol **sym_tbl) {
     while (fgets(buff, sizeof(buff), src_file) != NULL) {
         sscanf(buff, "%s", buff);
         strcpy(clean_buff, buff);
-        CLEAN_OPERAND(temp, clean_buff);
 
+        CLEAN_OPERAND(temp, clean_buff);
         switch (buff[0]) {
-            /* operand */
+            // operand parse
             case '(':
                 sym = operand_search(*sym_tbl, temp);
                 byte_buff |= sym->bin;
-
                 break;
             case '@':
                 if (!isdigit(temp[0])) {
@@ -142,7 +144,7 @@ void processor(char *file_name, struct Symbol **sym_tbl) {
                     byte_buff = (unsigned short) atoi(temp);
                 break;
             default:
-                /* opcode */
+                // opcode parse
                 sign = strchr(temp, '=');
                 if (sign) {
                     instr_fields[0] = strtok(temp, "=");
@@ -160,8 +162,10 @@ void processor(char *file_name, struct Symbol **sym_tbl) {
                 }
                 break;
         }
+        // keep byte order.Must be big-endian
         byte_buff = htons(byte_buff);
         fwrite(&byte_buff, sizeof(byte_buff), 1, bin_file);
+        // reset buff
         byte_buff &= ~byte_buff;
     }
 

@@ -41,6 +41,7 @@ void init_sym_table(struct Symbol **sym_table) {
 
 void insert(struct Symbol **node, const char *symbol, unsigned short bin) {
     struct Symbol *temp;
+    // create new node
     if (*node == NULL) {
         temp = (struct Symbol *) malloc(sizeof(struct Symbol));
         if (temp == NULL) {
@@ -53,6 +54,7 @@ void insert(struct Symbol **node, const char *symbol, unsigned short bin) {
 
         *node = temp;
     } else {
+        // determine where to insert
         if (strcmp(symbol, (*node)->operand) > 0)
             insert(&(*node)->right, symbol, bin);
         else

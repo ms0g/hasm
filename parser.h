@@ -9,7 +9,7 @@ enum C_INS_FIELD {
     DEST,
     COMP,
     JMP
-};
+};/* C instruction fields */
 
 struct C_INS {
     const char *name;
@@ -17,12 +17,14 @@ struct C_INS {
     unsigned short opcode:16;
 }; /* Instructions table */
 
+/* opcode mnemonics */
+extern struct C_INS _instructions[];
 
-extern struct C_INS _instructions[]; /* opcode mnemonics */
-/* operand extractions */
+/* extract operands, create intermediate file,update symbol table */
 void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl);
-
+/* process intermediate file via symbol table */
 void processor(char *file_name, struct Symbol **sym_tbl);
-unsigned short opcode_search(char* name,enum C_INS_FIELD type);
+/* search mnemonics */
+unsigned short opcode_search(char* name, enum C_INS_FIELD type);
 
 #endif //HASM_PARSER_H
