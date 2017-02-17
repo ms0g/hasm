@@ -80,8 +80,6 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
         if (*buff == '\r') continue;
         if (*buff == '\n') continue;
 
-        // increase ROM address
-        ++LC;
         sscanf(buff, "%s", buff);
         strcpy(clean_buff, buff);
 
@@ -89,7 +87,7 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
         switch (buff[0]) {
             case '(':
                 // (LOOP)
-                insert(sym_tbl, temp, ++LC);
+                insert(sym_tbl, temp, LC);
                 break;
             case '@':
                 // @2
@@ -104,6 +102,8 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
                 break;
         }
         fprintf(int_file, "%s\n", buff);
+        // increase ROM address
+        ++LC;
     }
     fclose(int_file);
 }
