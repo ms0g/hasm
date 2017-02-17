@@ -1,5 +1,4 @@
 // Calculate x * y
-@2
 @R1    // Load R1 to A
 D=M    // D = y
 @R3    // Load R3 to A
