@@ -75,13 +75,13 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
     // create intermediate file
     int_file = fopen(file_name, "w");
     while (fgets(buff, sizeof(buff), src_file) != NULL) {
-        // increase ROM address
-        ++LC;
         // ignore comments,spaces
         if (*buff == '/') continue;
         if (*buff == '\r') continue;
         if (*buff == '\n') continue;
 
+        // increase ROM address
+        ++LC;
         sscanf(buff, "%s", buff);
         strcpy(clean_buff, buff);
 
