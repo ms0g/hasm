@@ -88,6 +88,8 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
             case '(':
                 // (LOOP)
                 insert(sym_tbl, temp, LC);
+                // After inserting label,flush buff.Because we just need addresses of labels.
+                buff[0] = '\0';
                 break;
             case '@':
                 // @2
@@ -101,9 +103,12 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
             default:
                 break;
         }
-        fprintf(int_file, "%s\n", buff);
-        // increase ROM address
-        ++LC;
+
+        if(buff[0] != '\0'){
+            fprintf(int_file, "%s\n", buff);
+            // increase ROM address
+            ++LC;
+        }
     }
     fclose(int_file);
 }
@@ -130,10 +135,6 @@ void processor(char *file_name, struct Symbol **sym_tbl) {
         CLEAN_OPERAND(temp, clean_buff);
         switch (buff[0]) {
             // operand parse
-            case '(':
-                sym = operand_search(*sym_tbl, temp);
-                byte_buff |= sym->bin;
-                break;
             case '@':
                 if (!isdigit(temp[0])) {
                     sym = operand_search(*sym_tbl, temp);
