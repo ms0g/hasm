@@ -32,9 +32,11 @@ int main(int argc, char *argv[]) {
 
     assert(src_file != NULL);
 
+    // initializing symbol table
     init_sym_table(&sym_tbl);
-
+    // extracting labels
     preprocessor(src_file, argv[optind], &sym_tbl);
+    // processing
     processor(argv[optind], &sym_tbl);
 
     clear(&sym_tbl);

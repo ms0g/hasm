@@ -15,7 +15,7 @@
 #define BUFF 1080
 
 static unsigned short LC = 0x0000; /* address counter for label operands */
-static unsigned short byte_buff = 0x0000;/* buffer to keep binary field */
+static unsigned short byte_buff = 0x0000; /* buffer to keep binary field */
 static unsigned short RAM_ADDR = 0x0010; /* RAM[16] */
 
 struct C_INS _instructions[] = {
@@ -67,7 +67,7 @@ struct C_INS _instructions[] = {
 #define SIZE_OF_INSTRUCTIONS (int)(sizeof(_instructions)/sizeof(_instructions[0]))
 
 void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
-    char buff[BUFF],clean_buff[100];
+    char buff[BUFF], clean_buff[100];
     FILE *int_file;
     char *temp;
 
@@ -103,8 +103,7 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
             default:
                 break;
         }
-
-        if(buff[0] != '\0'){
+        if (buff[0] != '\0') {
             fprintf(int_file, "%s\n", buff);
             // increase ROM address
             ++LC;
@@ -115,9 +114,9 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
 
 
 void processor(char *file_name, struct Symbol **sym_tbl) {
-    char buff[BUFF],clean_buff[100];
-    char *temp,*sign,*instr_fields[2];
-    unsigned short dest,comp,jmp;
+    char buff[BUFF], clean_buff[100];
+    char *temp, *sign, *instr_fields[2];
+    unsigned short dest, comp, jmp;
     struct Symbol *sym;
 
     FILE *src_file;
@@ -133,35 +132,33 @@ void processor(char *file_name, struct Symbol **sym_tbl) {
         strcpy(clean_buff, buff);
 
         CLEAN_OPERAND(temp, clean_buff);
-        switch (buff[0]) {
+        if (buff[0] == '@') {
             // operand parse
-            case '@':
-                if (!isdigit(temp[0])) {
-                    sym = operand_search(*sym_tbl, temp);
-                    if (sym) {
-                        byte_buff |= sym->bin;
-                    }
-                } else
-                    byte_buff = (unsigned short) atoi(temp);
-                break;
-            default:
-                // opcode parse
-                sign = strchr(temp, '=');
-                if (sign) {
-                    instr_fields[0] = strtok(temp, "=");
-                    instr_fields[1] = strtok(NULL, "=");
-                    dest = opcode_search(instr_fields[0], DEST);
-                    comp = opcode_search(instr_fields[1], COMP);
-                    byte_buff |= (dest | comp);
-                } else {
-                    instr_fields[0] = strtok(temp, ";");
-                    instr_fields[1] = strtok(NULL, ";");
-                    comp = opcode_search(instr_fields[0], COMP);
-                    jmp = opcode_search(instr_fields[1], JMP);
-                    byte_buff |= (comp | jmp);
-
+            if (!isdigit(temp[0])) {
+                sym = operand_search(*sym_tbl, temp);
+                if (sym) {
+                    byte_buff |= sym->bin;
                 }
-                break;
+            } else
+                byte_buff = (unsigned short) atoi(temp);
+        } else {
+            // opcode parse
+            sign = strchr(temp, '=');
+            if (sign) {
+                instr_fields[0] = strtok(temp, "=");
+                instr_fields[1] = strtok(NULL, "=");
+                dest = opcode_search(instr_fields[0], DEST);
+                comp = opcode_search(instr_fields[1], COMP);
+                byte_buff |= (dest | comp);
+            } else {
+                instr_fields[0] = strtok(temp, ";");
+                instr_fields[1] = strtok(NULL, ";");
+                comp = opcode_search(instr_fields[0], COMP);
+                jmp = opcode_search(instr_fields[1], JMP);
+                byte_buff |= (comp | jmp);
+
+            }
+
         }
         // keep byte order.Must be big-endian
         byte_buff = htons(byte_buff);
