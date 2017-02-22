@@ -70,17 +70,20 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
     char buff[BUFF], clean_buff[100];
     FILE *int_file;
     char *temp;
+    struct Symbol* sym;
 
     INT_FILE_NAME(file_name);
     // create intermediate file
     int_file = fopen(file_name, "w");
     while (fgets(buff, sizeof(buff), src_file) != NULL) {
+        sscanf(buff, "%s", buff);
+
         // ignore comments,spaces
         if (*buff == '/') continue;
         if (*buff == '\r') continue;
+        if (isspace(*buff)) continue;
         if (*buff == '\n') continue;
 
-        sscanf(buff, "%s", buff);
         strcpy(clean_buff, buff);
 
         CLEAN_OPERAND(temp, clean_buff);
@@ -97,8 +100,11 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
                     break;
                 } else {
                     // @i
-                    if (islower(temp[0]))
-                        insert(sym_tbl, temp, RAM_ADDR++);
+                    if (islower(temp[0])){
+                        sym = operand_search(*sym_tbl, temp);
+                        if(!sym)
+                            insert(sym_tbl, temp, RAM_ADDR++);
+                    }
                 }
             default:
                 break;
