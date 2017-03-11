@@ -1,15 +1,10 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <arpa/inet.h>
 #include "parser.h"
+#include "w_ob.h"
 
-#define INT_FILE_NAME(s) strcat(s,".int")
-#define REMOVE_EXT(s) {\
-        char* t=strchr(file_name,'.');\
-        *t='\0';\
-        }
-#define BIN_FILE(s) strcat(s,".o")
+
 #define CLEAN_OPERAND(d, s) d=strtok(s,")(@")
 
 #define BUFF 1080
@@ -72,7 +67,6 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
     char *temp;
     struct Symbol* sym;
 
-    INT_FILE_NAME(file_name);
     // create intermediate file
     int_file = fopen(file_name, "w");
     while (fgets(buff, sizeof(buff), src_file) != NULL) {
@@ -116,24 +110,22 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
         }
     }
     fclose(int_file);
+    fclose(src_file);
 }
 
 
-void processor(char *file_name, struct Symbol **sym_tbl) {
+void processor(FILE *int_file, char *file_name, struct Symbol **sym_tbl) {
     char buff[BUFF], clean_buff[100];
     char *temp, *sign, *instr_fields[2];
     unsigned short dest, comp, jmp;
     struct Symbol *sym;
 
-    FILE *src_file;
     FILE *bin_file;
-    // file operations
-    src_file = fopen(file_name, "r");
-    REMOVE_EXT(file_name);
-    BIN_FILE(file_name);
     bin_file = fopen(file_name, "wb");
 
-    while (fgets(buff, sizeof(buff), src_file) != NULL) {
+    write_hdr(bin_file);
+
+    while (fgets(buff, sizeof(buff), int_file) != NULL) {
         sscanf(buff, "%s", buff);
         strcpy(clean_buff, buff);
 
@@ -162,19 +154,15 @@ void processor(char *file_name, struct Symbol **sym_tbl) {
                 comp = opcode_search(instr_fields[0], COMP);
                 jmp = opcode_search(instr_fields[1], JMP);
                 byte_buff |= (comp | jmp);
-
             }
-
         }
         // keep byte order.Must be big-endian
-        byte_buff = htons(byte_buff);
+        byte_buff = unint16_read(byte_buff);
         fwrite(&byte_buff, sizeof(byte_buff), 1, bin_file);
         // reset buff
         byte_buff &= ~byte_buff;
     }
-
     fclose(bin_file);
-    fclose(src_file);
 }
 
 

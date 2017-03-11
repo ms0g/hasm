@@ -23,7 +23,7 @@ extern struct C_INS _instructions[];
 /* extract operands, create intermediate file,update symbol table */
 void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl);
 /* process intermediate file via symbol table */
-void processor(char *file_name, struct Symbol **sym_tbl);
+void processor(FILE *src_file, char *file_name, struct Symbol **sym_tbl);
 /* search mnemonics */
 unsigned short opcode_search(char* name, enum C_INS_FIELD type);
 
