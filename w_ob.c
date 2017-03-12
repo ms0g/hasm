@@ -11,5 +11,6 @@ void write_hdr(FILE *bin_file){
     hdr.h_MAG3 = MAG3;
     hdr.h_end = END;
     hdr.p_off = P_OFF;
+
     fwrite(&hdr,sizeof(Hof_hdr), 1, bin_file);
 }
