@@ -1,6 +1,7 @@
 # hasm
 Assembler for hack machine language built for virtual hardware platform from [From Nand to Tetris](https://www.coursera.org/learn/build-a-computer) course.
-####How to use
+
+### How to use
 ```bash
 ➜  ~ make
 ➜  ~ ./hasm [inputfile.asm]
