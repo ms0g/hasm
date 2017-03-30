@@ -5,12 +5,7 @@
 #include <getopt.h>
 #include "parser.h"
 
-#define INT_FILE_NAME(s) strcat(s,".int")
-#define REMOVE_EXT(s) {\
-        char* t=strchr(s,'.');\
-        *t='\0';\
-        }
-#define BIN_FILE(s) strcat(s,".o")
+
 
 
 int main(int argc, char *argv[]) {
@@ -46,13 +41,10 @@ int main(int argc, char *argv[]) {
     // initializing symbol table
     init_sym_table(&sym_tbl);
 
-    INT_FILE_NAME(file_name);
     // extracting labels
     preprocessor(src_file, file_name, &sym_tbl);
 
     src_file = fopen(file_name, "r");
-    REMOVE_EXT(file_name);
-    BIN_FILE(file_name);
 
     // processing
     processor(src_file, file_name, &sym_tbl);

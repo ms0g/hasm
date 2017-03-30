@@ -2,11 +2,16 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include "parser.h"
-#include "w_ob.h"
+#include "hdr.h"
 
 
 #define CLEAN_OPERAND(d, s) d=strtok(s,")(@")
-
+#define INT_FILE_NAME(s) strcat(s,".int")
+#define REMOVE_EXT(s) {\
+        char* t=strchr(s,'.');\
+        *t='\0';\
+        }
+#define BIN_FILE(s) strcat(s,".o")
 #define BUFF 1080
 
 static unsigned short LC = 0x0000; /* address counter for label operands */
@@ -67,6 +72,7 @@ void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
     char *temp;
     struct Symbol* sym;
 
+    INT_FILE_NAME(file_name);
     // create intermediate file
     int_file = fopen(file_name, "w");
     while (fgets(buff, sizeof(buff), src_file) != NULL) {
@@ -119,6 +125,9 @@ void processor(FILE *int_file, char *file_name, struct Symbol **sym_tbl) {
     char *temp, *sign, *instr_fields[2];
     unsigned short dest, comp, jmp;
     struct Symbol *sym;
+
+    REMOVE_EXT(file_name);
+    BIN_FILE(file_name);
 
     FILE *bin_file;
     bin_file = fopen(file_name, "wb");
