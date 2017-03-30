@@ -1,5 +1,5 @@
-#ifndef HASM_W_OB_H
-#define HASM_W_OB_H
+#ifndef HASM_HDR_H
+#define HASM_HDR_H
 
 #define unint16_read(_val_) (_val_ << 8)|(_val_ >> 8) /* read byte MSB */
 
@@ -22,4 +22,4 @@ typedef struct {
 #define P_OFF unint16_read(0x08) /* Program offset */
 
 void write_hdr(FILE *bin_file); /* write header */
-#endif //HASM_W_OB_H
+#endif //HASM_HDR_H

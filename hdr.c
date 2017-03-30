@@ -1,6 +1,6 @@
 #include <string.h>
 #include <stdio.h>
-#include "w_ob.h"
+#include "hdr.h"
 
 
 void write_hdr(FILE *bin_file){
