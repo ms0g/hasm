@@ -14,4 +14,4 @@ all: $(OBJS)
 	$(CC) $^ $(LFLAGS) -o $(TARGET) $(MODE)
 
 clean:
-	rm -f  *.o hasm asms/*.o asms/*.int
+	rm -f  *.o hasm asms/*.hex asms/*.int

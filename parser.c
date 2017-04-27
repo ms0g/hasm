@@ -3,15 +3,14 @@
 #include <stdlib.h>
 #include "parser.h"
 #include "hdr.h"
-
-
+/* Some utility macros */
 #define CLEAN_OPERAND(d, s) d=strtok(s,")(@")
 #define INT_FILE_NAME(s) strcat(s,".int")
 #define REMOVE_EXT(s) {\
         char* t=strchr(s,'.');\
         *t='\0';\
         }
-#define BIN_FILE(s) strcat(s,".o")
+#define BIN_FILE(s) strcat(s,".hex") /* hack executable file */
 #define BUFF 1080
 
 static unsigned short LC = 0x0000; /* address counter for label operands */
@@ -166,7 +165,7 @@ void processor(FILE *int_file, char *file_name, struct Symbol **sym_tbl) {
             }
         }
         // keep byte order.Must be big-endian
-        byte_buff = unint16_read(byte_buff);
+        byte_buff = read_msb(byte_buff);
         fwrite(&byte_buff, sizeof(byte_buff), 1, bin_file);
         // reset buff
         byte_buff &= ~byte_buff;
