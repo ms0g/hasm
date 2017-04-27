@@ -5,9 +5,6 @@
 #include <getopt.h>
 #include "parser.h"
 
-
-
-
 int main(int argc, char *argv[]) {
     int opt;
     FILE *src_file = NULL;
