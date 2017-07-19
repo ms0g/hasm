@@ -27,5 +27,5 @@ M=0
     0;JMP   // Goto LOOP
 
 (END)
-    @END
-    0;JMP   // End of program infinite loo
+    @sum
+    D=M   // End of program infinite loo
