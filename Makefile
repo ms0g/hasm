@@ -18,6 +18,9 @@ all: $(OBJS)
 hvm: $(HVM_OBJ)
 	$(CC) $^ $(LFLAGS) -o $(HVM_TARGET) $(MODE)
 
+check-mem-leak:
+	 valgrind  --leak-check=full  --show-leak-kinds=all ./hasm asms/add.asm
+
 .PHONY: clean
 clean:
 	rm -f  *.o hasm hvm core asms/*.hex asms/*.int
