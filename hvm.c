@@ -12,7 +12,6 @@
 #define FALSE   0
 #define INVALID -1
 #define P_OFF 0x8 /* program offset */
-#define read_msb(_val_) (_val_ << 8)|(_val_ >> 8) /* read byte MSB */
 
 /* Current state of machine */
 int running = TRUE;

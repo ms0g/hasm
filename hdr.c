@@ -3,7 +3,7 @@
 #include "hdr.h"
 
 
-void write_hdr(FILE *bin_file){
+void write_hdr(FILE *ofile){
     Hof_hdr hdr;
     hdr.h_MAG0 = MAG0;
     hdr.h_MAG1 = MAG1;
@@ -12,5 +12,5 @@ void write_hdr(FILE *bin_file){
     hdr.h_end = END;
     hdr.p_off = P_OFF;
 
-    fwrite(&hdr,sizeof(Hof_hdr), 1, bin_file);
+    hfwrite(&hdr,sizeof(Hof_hdr), 1, ofile);
 }

@@ -1,11 +1,11 @@
-OBJS = hasm.o parser.o symbol_table.o hdr.o
+OBJS = hasm.o parser.o symtab.o hdr.o hasmlib.o  optab.o
 TARGET = hasm
 HVM_TARGET = hvm
 HVM_OBJ = hvm.o
 CC = gcc
 MODE = -std=c99
 DEBUG = -g
-DEPS = parser.h symbol_table.h hdr.h hvm.h
+DEPS = parser.h symtab.h hdr.h hvm.h hasmlib.h optab.h
 CFLAGS =  -Wall -c $(DEBUG)
 LFLAGS =  -Wall $(DEBUG)
 

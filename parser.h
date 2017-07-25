@@ -3,28 +3,11 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include "symbol_table.h"
-
-enum C_INS_FIELD {
-    DEST,
-    COMP,
-    JMP
-};/* C instruction fields */
-
-struct C_INS {
-    const char *name;
-    enum C_INS_FIELD type;
-    unsigned short opcode:16;
-}; /* Instructions table */
-
-/* opcode mnemonics */
-extern struct C_INS _instructions[];
+#include "symtab.h"
 
 /* extract operands, create intermediate file,update symbol table */
-void preprocessor(FILE *src_file, char *file_name, struct Symbol **sym_tbl);
+void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl);
 /* process intermediate file via symbol table */
-void processor(FILE *src_file, char *file_name, struct Symbol **sym_tbl);
-/* search mnemonics */
-unsigned short opcode_search(char* name, enum C_INS_FIELD type);
-
+void init_synthesis(char *fname, struct Symbol **sym_tbl);
+void write_ofile(FILE *ofile);
 #endif //HASM_PARSER_H

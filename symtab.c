@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "symbol_table.h"
+#include "symtab.h"
+#include "hasmlib.h"
 
 struct Symbol predef_operands[] = {
         {"R0",     0x0000},
@@ -31,52 +32,49 @@ struct Symbol predef_operands[] = {
 
 #define SIZE_OF_SYMBOLS (int)(sizeof(predef_operands)/sizeof(predef_operands[0]))
 
-void init_sym_table(struct Symbol **sym_table) {
+void init_symtab(struct Symbol **sym_table) {
     for (int i = 0; i < SIZE_OF_SYMBOLS; ++i) {
-        insert(sym_table,predef_operands[i].operand,predef_operands[i].bin);
+        insert_symtab(sym_table, predef_operands[i].operand, predef_operands[i].addr);
     }
 
 }
 
 
-void insert(struct Symbol **node, const char *symbol, unsigned short bin) {
+void insert_symtab(struct Symbol **node, const char *symbol, unsigned short addr) {
     struct Symbol *temp;
     // create new node
     if (*node == NULL) {
-        temp = (struct Symbol *) malloc(sizeof(struct Symbol));
-        if (temp == NULL) {
-            fprintf(stderr, "Unable to allocate symbol");
-            exit(1);
-        }
+
+        temp = hmalloc(sizeof(struct Symbol));
         strcpy(temp->operand,symbol);
-        temp->bin = bin;
+        temp->addr = addr;
         temp->left = temp->right = NULL;
 
         *node = temp;
     } else {
-        // determine where to insert
+        // determine where to insert symtab
         if (strcmp(symbol, (*node)->operand) > 0)
-            insert(&(*node)->right, symbol, bin);
+            insert_symtab(&(*node)->right, symbol, addr);
         else
-            insert(&(*node)->left, symbol, bin);
+            insert_symtab(&(*node)->left, symbol, addr);
     }
 }
 
 
-struct Symbol *operand_search(struct Symbol *root, const char *symbol) {
+struct Symbol *scan_symtab(struct Symbol *root, const char *symbol) {
     if (root == NULL || strcmp(symbol, root->operand) == 0) {
         return root;
     } else if (strcmp(symbol, root->operand) > 0) {
-        return operand_search(root->right, symbol);
+        return scan_symtab(root->right, symbol);
     } else
-        return operand_search(root->left, symbol);
+        return scan_symtab(root->left, symbol);
 }
 
 
-void clear(struct Symbol **tree) {
+void cleanup_symtab(struct Symbol **tree) {
     if (*tree == NULL) return;
-    clear(&(*tree)->right);
-    clear(&(*tree)->left);
+    cleanup_symtab(&(*tree)->right);
+    cleanup_symtab(&(*tree)->left);
     free(*tree);
     *tree = NULL;
 }

@@ -1,14 +1,14 @@
 #ifndef HASM_HDR_H
 #define HASM_HDR_H
-
-#define read_msb(_val_) (_val_ << 8)|(_val_ >> 8) /* read byte MSB */
+#include <stdint.h>
+#include "hasmlib.h"
 
 
 typedef struct {
-    unsigned char h_MAG0;
-    unsigned char h_MAG1;
-    unsigned char h_MAG2;
-    unsigned char h_MAG3;
+    uint8_t h_MAG0;
+    uint8_t h_MAG1;
+    uint8_t h_MAG2;
+    uint8_t h_MAG3;
     unsigned short h_end;
     unsigned short p_off;
 
@@ -21,5 +21,5 @@ typedef struct {
 #define END read_msb(0x01) /* Endianness MSB(1) or LSB(2) */
 #define P_OFF read_msb(0x08) /* Program offset */
 
-void write_hdr(FILE *bin_file); /* write header */
+void write_hdr(FILE *ofile); /* write header */
 #endif //HASM_HDR_H
