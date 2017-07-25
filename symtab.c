@@ -45,7 +45,7 @@ void insert_symtab(struct Symbol **node, const char *symbol, unsigned short addr
     // create new node
     if (*node == NULL) {
 
-        temp = hmalloc(sizeof(struct Symbol));
+        temp = (struct Symbol *)hmalloc(sizeof(struct Symbol));
         strcpy(temp->operand,symbol);
         temp->addr = addr;
         temp->left = temp->right = NULL;
