@@ -133,6 +133,7 @@ void init_synthesis(char *fname, struct Symbol **sym_tbl) {
         write_ofile(ofile);
 
     }
+    hfclose(ifile);
     hfclose(ofile);
 }
 
