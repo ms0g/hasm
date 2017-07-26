@@ -17,7 +17,7 @@
 int running = TRUE;
 
 /* VM initialization */
-void vm_init(char *arg) {
+static void vm_init(char *arg) {
     uint16_t buff;
     int ind = 0;
 
@@ -37,12 +37,12 @@ void vm_init(char *arg) {
 }
 
 /* Fetch */
-uint16_t fetch(HVMData *hdt) {
+static uint16_t fetch(HVMData *hdt) {
     return ROM[hdt->pc++];
 }
 
 /* Decode */
-void decode(uint16_t instr, HVMData *hdt) {
+static void decode(uint16_t instr, HVMData *hdt) {
     /* check instr first 3 bits.If 111 it is C instr,otherwise A instr */
     if (((instr & 0xE000) >> 13) ^ 0x7) {
         hdt->A_REG = instr;
@@ -58,7 +58,7 @@ void decode(uint16_t instr, HVMData *hdt) {
 }
 
 /* Execute */
-void execute(HVMData *hdt) {
+static void execute(HVMData *hdt) {
     if (!(hdt->jmp ^ 0x0)) {
         switch (hdt->comp) {
             case COMP_ZERO:
@@ -1787,7 +1787,7 @@ void execute(HVMData *hdt) {
     }
 }
 
-void snapshot(HVMData *hdt) {
+static void snapshot(HVMData *hdt) {
     char *msg = " _   ___      ____  __   \n"
             "| | | |\\ \\   / |  \\/  |  \n"
             "| |_| | \\ \\ / /| |\\/| |  \n"
