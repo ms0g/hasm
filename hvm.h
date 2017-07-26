@@ -25,13 +25,13 @@ uint16_t ROM[ROM_SIZE];
 int16_t RAM[RAM_SIZE];
 
 /* vm init */
-void vm_init(char *arg);
+static void vm_init(char *arg);
 
 /* Instruction cycle: Fetch, Decode, Execute */
-uint16_t fetch(HVMData *hdt);
-void decode(uint16_t instr, HVMData *hdt);
-void execute(HVMData *hdt);
+static uint16_t fetch(HVMData *hdt);
+static void decode(uint16_t instr, HVMData *hdt);
+static void execute(HVMData *hdt);
 
 /* Memory snapshot */
-void snapshot(HVMData *hdt);
+static void snapshot(HVMData *hdt);
 #endif //HVM_HVM_H

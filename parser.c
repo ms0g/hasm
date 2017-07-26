@@ -7,15 +7,11 @@
 
 #define BUFF 1080
 
-/* address counter for label operands */
-static uint16_t LC = 0x0000;
+
 /* buffer to keep binary field */
 static uint16_t byte_buff = 0x0000;
-/* RAM[16] */
-static uint16_t RAM_ADDR = 0x0010;
 
-
-
+/* pass 1 */
 void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
     char buff[BUFF], label[100];
     FILE *int_file;
@@ -24,6 +20,12 @@ void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
     tk =  buff;
 
     memset(label,0,100);
+
+    // address counter for label operands
+    uint16_t LC = 0x0000;
+
+    // RAM[16]
+    uint16_t RAM_ADDR = 0x0010;
 
     // create intermediate file
     strcat(file_name, ".int");
@@ -78,7 +80,7 @@ void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
     hfclose(src_file);
 }
 
-
+/* pass 2 */
 void init_synthesis(char *fname, struct Symbol **sym_tbl) {
     char buff[BUFF];
     char  *token, *instr_fields[2];
