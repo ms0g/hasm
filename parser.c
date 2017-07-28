@@ -9,7 +9,11 @@
 
 
 /* buffer to keep binary field */
-static uint16_t byte_buff = 0x0000;
+static uint16_t byte_buff;
+/* address counter for label operands */
+static uint16_t LC;
+/* RAM[16] */
+static uint16_t RAM_ADDR = 0x0010;
 
 /* pass 1 */
 void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
@@ -20,12 +24,6 @@ void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
     tk =  buff;
 
     memset(label,0,100);
-
-    // address counter for label operands
-    uint16_t LC = 0x0000;
-
-    // RAM[16]
-    uint16_t RAM_ADDR = 0x0010;
 
     // create intermediate file
     strcat(file_name, ".int");
