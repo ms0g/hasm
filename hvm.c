@@ -22,7 +22,7 @@ static void vm_init(char *arg) {
     int ind = 0;
 
     FILE *hex;
-    hex = fopen(arg, "rb");
+    hex = hfopen(arg, "rb");
 
     assert(hex != NULL);
 
@@ -33,7 +33,7 @@ static void vm_init(char *arg) {
     }
     /* our end-of-program signature */
     ROM[ind] = (uint16_t) EOF;
-    fclose(hex);
+    hfclose(hex);
 }
 
 /* Fetch */
