@@ -1,6 +1,6 @@
-
 #ifndef HASM_HASMLIB_H
 #define HASM_HASMLIB_H
+#include <stdio.h>
 
 #define read_msb(_val_) (_val_ << 8)|(_val_ >> 8) /* read byte MSB */
 

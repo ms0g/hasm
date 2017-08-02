@@ -1,6 +1,5 @@
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include "hasmlib.h"
 
 void *hmalloc(size_t size){
