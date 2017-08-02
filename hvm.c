@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "hvm.h"
+#include "hasmlib.h"
+#include "hopcodes.h"
 
 #define TRUE    1
 #define FALSE   0

@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include "hasmlib.h"
-#include "hopcodes.h"
 
 #define ROM_SIZE 32768 /* 32KB */
 #define RAM_SIZE 16384 /* 16KB */

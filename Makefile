@@ -1,7 +1,7 @@
 OBJS = hasm.o parser.o symtab.o hdr.o hasmlib.o  optab.o
 TARGET = hasm
 HVM_TARGET = hvm
-HVM_OBJ = hvm.o
+HVM_OBJ = hvm.o hasmlib.o
 CC = gcc
 MODE = -std=c99
 DEBUG = -g
