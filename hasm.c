@@ -29,9 +29,9 @@ int main(int argc, char *argv[]) {
         printf("%s\n", usage);
         return 0;
     }
-    else {
-        src_file = hfopen(argv[optind], "r");
-    }
+    
+    src_file = hfopen(argv[optind], "r");
+    
     assert(src_file != NULL);
 
     // initializing symbol table
