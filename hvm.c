@@ -217,7 +217,7 @@ static void execute(HVMData *hdt) {
             SWITCH_CASE_JMP(COMP_D, hdt, hdt->D_REG)
             SWITCH_CASE_JMP(COMP_A, hdt, hdt->A_REG)
             SWITCH_CASE_JMP(COMP_NOT_D, hdt, ~hdt->D_REG)
-            SWITCH_CASE_JMP(COMP_NOT_A, hdt, ~hdt->A_REG > 0)
+            SWITCH_CASE_JMP(COMP_NOT_A, hdt, ~hdt->A_REG)
             SWITCH_CASE_JMP(COMP_MINUS_D, hdt, -hdt->D_REG)
             SWITCH_CASE_JMP(COMP_MINUS_A, hdt, -hdt->A_REG)
             SWITCH_CASE_JMP(COMP_D_PLUS_1, hdt, ++hdt->D_REG)
