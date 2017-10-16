@@ -59,69 +59,69 @@ static void decode(uint16_t instr, HVMData *hdt) {
     hdt->ex_state = TRUE;
 }
 
-#define SWITCH_CASE_DEST(OPCODE, ptrVmdata, comp)               \
+#define SWITCH_CASE_DEST(OPCODE, ptrVmData, COMP)               \
         case OPCODE:                                            \
-            switch ((ptrVmdata)->dest) {                        \
+            switch ((ptrVmData)->dest) {                        \
                     case DEST_M:                                \
-                        RAM[(ptrVmdata)->A_REG] = comp;         \
+                        RAM[(ptrVmData)->A_REG] = COMP;         \
                         break;                                  \
                     case DEST_D:                                \
-                        (ptrVmdata)->D_REG = comp;              \
+                        (ptrVmData)->D_REG = COMP;              \
                         break;                                  \
                     case DEST_MD:                               \
-                        (ptrVmdata)->D_REG = comp;              \
-                        RAM[(ptrVmdata)->A_REG] = comp;         \
+                        (ptrVmData)->D_REG = COMP;              \
+                        RAM[(ptrVmData)->A_REG] = COMP;         \
                         break;                                  \
                     case DEST_A:                                \
-                        (ptrVmdata)->A_REG = comp;              \
+                        (ptrVmData)->A_REG = COMP;              \
                         break;                                  \
                     case DEST_AM:                               \
-                        RAM[(ptrVmdata)->A_REG] = comp;         \
-                        (ptrVmdata)->A_REG = comp;              \
+                        RAM[(ptrVmData)->A_REG] = COMP;         \
+                        (ptrVmData)->A_REG = COMP;              \
                         break;                                  \
                     case DEST_AD:                               \
-                        (ptrVmdata)->D_REG = comp;              \
-                        (ptrVmdata)->A_REG = comp;              \
+                        (ptrVmData)->D_REG = COMP;              \
+                        (ptrVmData)->A_REG = COMP;              \
                         break;                                  \
                     case DEST_AMD:                              \
-                        RAM[(ptrVmdata)->A_REG] = comp;         \
-                        (ptrVmdata)->A_REG = comp;              \
-                        (ptrVmdata)->D_REG = comp;              \
+                        RAM[(ptrVmData)->A_REG] = COMP;         \
+                        (ptrVmData)->A_REG = COMP;              \
+                        (ptrVmData)->D_REG = COMP;              \
                         break;                                  \
                     default:                                    \
                         break;                                  \
             }                                                   \
             break;                                              \
 
-#define SWITCH_CASE_JMP(OPCODE, ptrVmdata, comp)                \
+#define SWITCH_CASE_JMP(OPCODE, ptrVmData, COMP)                \
     case OPCODE:                                                \
-        switch ((ptrVmdata)->jmp) {                             \
+        switch ((ptrVmData)->jmp) {                             \
             case JGT:                                           \
-                if ((comp) > 0)                                 \
-                    (ptrVmdata)->pc = (ptrVmdata)->A_REG;       \
+                if ((COMP) > 0)                                 \
+                    (ptrVmData)->pc = (ptrVmData)->A_REG;       \
                 break;                                          \
             case JEQ:                                           \
-                if ((comp) == 0)                                \
-                    (ptrVmdata)->pc = (ptrVmdata)->A_REG;       \
+                if ((COMP) == 0)                                \
+                    (ptrVmData)->pc = (ptrVmData)->A_REG;       \
                 break;                                          \
             case JGE:                                           \
-                if ((comp) >= 0)                                \
-                    (ptrVmdata)->pc = (ptrVmdata)->A_REG;       \
+                if ((COMP) >= 0)                                \
+                    (ptrVmData)->pc = (ptrVmData)->A_REG;       \
                 break;                                          \
             case JLT:                                           \
-                if ((comp) < 0)                                 \
-                    (ptrVmdata)->pc = (ptrVmdata)->A_REG;       \
+                if ((COMP) < 0)                                 \
+                    (ptrVmData)->pc = (ptrVmData)->A_REG;       \
                 break;                                          \
             case JNE:                                           \
-                if ((comp) != 0)                                \
-                    (ptrVmdata)->pc = (ptrVmdata)->A_REG;       \
+                if ((COMP) != 0)                                \
+                    (ptrVmData)->pc = (ptrVmData)->A_REG;       \
                 break;                                          \
             case JLE:                                           \
-                if ((comp) <= 0)                                \
-                    (ptrVmdata)->pc = (ptrVmdata)->A_REG;       \
+                if ((COMP) <= 0)                                \
+                    (ptrVmData)->pc = (ptrVmData)->A_REG;       \
                     break;                                      \
             case JMP:                                           \
-                (ptrVmdata)->pc = (ptrVmdata)->A_REG;           \
+                (ptrVmData)->pc = (ptrVmData)->A_REG;           \
             default:                                            \
                 break;                                          \
         }                                                       \
@@ -145,20 +145,20 @@ static void execute(HVMData *hdt) {
             SWITCH_CASE_DEST(COMP_A_PLUS_1, hdt, ++hdt->A_REG)
             SWITCH_CASE_DEST(COMP_D_MINUS_1, hdt, --hdt->D_REG)
             SWITCH_CASE_DEST(COMP_A_MINUS_1, hdt, --hdt->A_REG)
-            SWITCH_CASE_DEST(COMP_D_PLUS_A, hdt, hdt->D_REG + hdt->A_REG)
-            SWITCH_CASE_DEST(COMP_D_MINUS_A, hdt, hdt->D_REG - hdt->A_REG)
-            SWITCH_CASE_DEST(COMP_A_MINUS_D, hdt, hdt->A_REG - hdt->D_REG)
-            SWITCH_CASE_DEST(COMP_D_AND_A, hdt, hdt->D_REG & hdt->A_REG)
-            SWITCH_CASE_DEST(COMP_D_OR_A, hdt, hdt->D_REG | hdt->A_REG)
+            SWITCH_CASE_DEST(COMP_D_PLUS_A, hdt, (hdt->D_REG + hdt->A_REG))
+            SWITCH_CASE_DEST(COMP_D_MINUS_A, hdt, (hdt->D_REG - hdt->A_REG))
+            SWITCH_CASE_DEST(COMP_A_MINUS_D, hdt, (hdt->A_REG - hdt->D_REG))
+            SWITCH_CASE_DEST(COMP_D_AND_A, hdt, (hdt->D_REG & hdt->A_REG))
+            SWITCH_CASE_DEST(COMP_D_OR_A, hdt, (hdt->D_REG | hdt->A_REG))
             SWITCH_CASE_DEST(COMP_M, hdt, RAM[hdt->A_REG])
             SWITCH_CASE_DEST(COMP_NOT_M, hdt, ~RAM[hdt->A_REG])
             SWITCH_CASE_DEST(COMP_MINUS_M, hdt, -RAM[hdt->A_REG])
             SWITCH_CASE_DEST(COMP_M_PLUS_1, hdt, ++RAM[hdt->A_REG])
-            SWITCH_CASE_DEST(COMP_D_PLUS_M, hdt, hdt->D_REG + RAM[hdt->A_REG])
-            SWITCH_CASE_DEST(COMP_D_MINUS_M, hdt, hdt->D_REG - RAM[hdt->A_REG])
-            SWITCH_CASE_DEST(COMP_M_MINUS_D, hdt, RAM[hdt->A_REG] - hdt->D_REG)
-            SWITCH_CASE_DEST(COMP_D_AND_M, hdt, hdt->D_REG & RAM[hdt->A_REG])
-            SWITCH_CASE_DEST(COMP_D_OR_M, hdt, hdt->D_REG | RAM[hdt->A_REG])
+            SWITCH_CASE_DEST(COMP_D_PLUS_M, hdt, (hdt->D_REG + RAM[hdt->A_REG]))
+            SWITCH_CASE_DEST(COMP_D_MINUS_M, hdt, (hdt->D_REG - RAM[hdt->A_REG]))
+            SWITCH_CASE_DEST(COMP_M_MINUS_D, hdt, (RAM[hdt->A_REG] - hdt->D_REG))
+            SWITCH_CASE_DEST(COMP_D_AND_M, hdt, (hdt->D_REG & RAM[hdt->A_REG]))
+            SWITCH_CASE_DEST(COMP_D_OR_M, hdt, (hdt->D_REG | RAM[hdt->A_REG]))
 
             default:
                 running = FALSE;
@@ -213,7 +213,6 @@ static void execute(HVMData *hdt) {
                     default:
                         break;
                 }
-
                 break;
             SWITCH_CASE_JMP(COMP_D, hdt, hdt->D_REG)
             SWITCH_CASE_JMP(COMP_A, hdt, hdt->A_REG)
