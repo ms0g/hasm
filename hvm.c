@@ -12,7 +12,7 @@
 
 #define TRUE    1
 #define FALSE   0
-#define INVALID -1
+#define INVALID (-1)
 #define P_OFF 0x8 /* program offset */
 
 /* Current state of machine */
@@ -59,39 +59,39 @@ static void decode(uint16_t instr, HVMData *hdt) {
     hdt->ex_state = TRUE;
 }
 
-#define SWITCH_CASE_DEST(OPCODE, ptrVmData, COMP)               \
-        case OPCODE:                                            \
-            switch ((ptrVmData)->dest) {                        \
-                    case DEST_M:                                \
-                        RAM[(ptrVmData)->A_REG] = COMP;         \
-                        break;                                  \
-                    case DEST_D:                                \
-                        (ptrVmData)->D_REG = COMP;              \
-                        break;                                  \
-                    case DEST_MD:                               \
-                        (ptrVmData)->D_REG = COMP;              \
-                        RAM[(ptrVmData)->A_REG] = COMP;         \
-                        break;                                  \
-                    case DEST_A:                                \
-                        (ptrVmData)->A_REG = COMP;              \
-                        break;                                  \
-                    case DEST_AM:                               \
-                        RAM[(ptrVmData)->A_REG] = COMP;         \
-                        (ptrVmData)->A_REG = COMP;              \
-                        break;                                  \
-                    case DEST_AD:                               \
-                        (ptrVmData)->D_REG = COMP;              \
-                        (ptrVmData)->A_REG = COMP;              \
-                        break;                                  \
-                    case DEST_AMD:                              \
-                        RAM[(ptrVmData)->A_REG] = COMP;         \
-                        (ptrVmData)->A_REG = COMP;              \
-                        (ptrVmData)->D_REG = COMP;              \
-                        break;                                  \
-                    default:                                    \
-                        break;                                  \
-            }                                                   \
-            break;                                              \
+#define SWITCH_CASE_DEST(OPCODE, ptrVmData, COMP)       \
+    case OPCODE:                                        \
+        switch ((ptrVmData)->dest) {                    \
+            case DEST_M:                                \
+                RAM[(ptrVmData)->A_REG] = COMP;         \
+                break;                                  \
+            case DEST_D:                                \
+                (ptrVmData)->D_REG = COMP;              \
+                break;                                  \
+            case DEST_MD:                               \
+                (ptrVmData)->D_REG = COMP;              \
+                RAM[(ptrVmData)->A_REG] = COMP;         \
+                break;                                  \
+            case DEST_A:                                \
+                (ptrVmData)->A_REG = COMP;              \
+                break;                                  \
+            case DEST_AM:                               \
+                RAM[(ptrVmData)->A_REG] = COMP;         \
+                (ptrVmData)->A_REG = COMP;              \
+                break;                                  \
+            case DEST_AD:                               \
+                (ptrVmData)->D_REG = COMP;              \
+                (ptrVmData)->A_REG = COMP;              \
+                break;                                  \
+            case DEST_AMD:                              \
+                RAM[(ptrVmData)->A_REG] = COMP;         \
+                (ptrVmData)->A_REG = COMP;              \
+                (ptrVmData)->D_REG = COMP;              \
+                break;                                  \
+            default:                                    \
+                break;                                  \
+        }                                               \
+        break;                                          \
 
 #define SWITCH_CASE_JMP(OPCODE, ptrVmData, COMP)                \
     case OPCODE:                                                \
