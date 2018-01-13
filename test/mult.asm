@@ -46,4 +46,4 @@ M=D
 (END)
 
   @R2
-  D=M // infinite loop
+  D=M

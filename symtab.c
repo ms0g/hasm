@@ -30,9 +30,11 @@ struct Symbol predef_operands[] = {
         {"KBD",    0x6000}
 };
 
-#define SIZE_OF_SYMBOLS (int)(sizeof(predef_operands)/sizeof(predef_operands[0]))
 
 void init_symtab(struct Symbol **sym_table) {
+
+#define SIZE_OF_SYMBOLS (int)(sizeof(predef_operands)/sizeof(predef_operands[0]))
+
     for (int i = 0; i < SIZE_OF_SYMBOLS; ++i) {
         insert_symtab(sym_table, predef_operands[i].operand, predef_operands[i].addr);
     }
@@ -45,8 +47,8 @@ void insert_symtab(struct Symbol **node, const char *symbol, unsigned short addr
     // create new node
     if (*node == NULL) {
 
-        temp = (struct Symbol *)hmalloc(sizeof(struct Symbol));
-        strcpy(temp->operand,symbol);
+        temp = (struct Symbol *) hmalloc(sizeof(struct Symbol));
+        strcpy(temp->operand, symbol);
         temp->addr = addr;
         temp->left = temp->right = NULL;
 
@@ -71,10 +73,10 @@ struct Symbol *scan_symtab(struct Symbol *root, const char *symbol) {
 }
 
 
-void cleanup_symtab(struct Symbol **tree) {
-    if (*tree == NULL) return;
-    cleanup_symtab(&(*tree)->right);
-    cleanup_symtab(&(*tree)->left);
-    free(*tree);
-    *tree = NULL;
+void cleanup_symtab(struct Symbol **sym_table) {
+    if (*sym_table == NULL) return;
+    cleanup_symtab(&(*sym_table)->right);
+    cleanup_symtab(&(*sym_table)->left);
+    free(*sym_table);
+    *sym_table = NULL;
 }

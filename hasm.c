@@ -6,15 +6,17 @@
 #include "parser.h"
 #include "lib/hasmlib.h"
 
+
+FILE *src_file = NULL;
+struct Symbol *sym_tbl = NULL;
+
+void cleanup();
+
 int main(int argc, char *argv[]) {
     int opt;
-    FILE *src_file = NULL;
-    struct Symbol* sym_tbl = NULL;
-
-    const char* usage = "Usage: ./hasm [file]";
-    while ((opt = getopt(argc, argv, "h:")) != -1)
-    {
-        switch (opt){
+    const char *usage = "Usage: ./hasm [file]";
+    while ((opt = getopt(argc, argv, "h:")) != -1) {
+        switch (opt) {
             case 'h':
                 printf("%s\n", usage);
                 break;
@@ -25,13 +27,13 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    if (argv[optind] == NULL || strlen(argv[optind]) == 0){
+    if (argv[optind] == NULL || strlen(argv[optind]) == 0) {
         printf("%s\n", usage);
         return 0;
     }
-    
+
     src_file = hfopen(argv[optind], "r");
-    
+
     assert(src_file != NULL);
 
     // initializing symbol table
@@ -43,7 +45,14 @@ int main(int argc, char *argv[]) {
     // pass 2
     init_synthesis(argv[optind], &sym_tbl);
 
-    cleanup_symtab(&sym_tbl);
+    cleanup();
 
     return 0;
+}
+
+void cleanup() {
+    cleanup_symtab(&sym_tbl);
+    hfclose(src_file);
+    hfclose(ifile);
+    hfclose(ofile);
 }

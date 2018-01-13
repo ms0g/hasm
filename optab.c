@@ -3,15 +3,15 @@
 #include "optab.h"
 #include "lib/hopcodes.h"
 
-uint16_t scan_opc(char *opcode, enum op_type type){
+uint16_t scan_opc(const char *opcode, const enum op_type type) {
     if (strcmp(opcode, "0") == 0)
         return COMP_ZERO;
     else if (strcmp(opcode, "1") == 0)
         return COMP_ONE;
     else if (strcmp(opcode, "-1") == 0)
         return COMP_MINUS_1;
-    else if (strcmp(opcode, "D") == 0){
-        switch (type){
+    else if (strcmp(opcode, "D") == 0) {
+        switch (type) {
             case COMP:
                 return COMP_D;
             case DEST:
@@ -19,9 +19,8 @@ uint16_t scan_opc(char *opcode, enum op_type type){
             default:
                 break;
         }
-    }
-    else if (strcmp(opcode, "A") == 0){
-        switch (type){
+    } else if (strcmp(opcode, "A") == 0) {
+        switch (type) {
             case COMP:
                 return COMP_A;
             case DEST:
@@ -29,8 +28,7 @@ uint16_t scan_opc(char *opcode, enum op_type type){
             default:
                 break;
         }
-    }
-    else if (strcmp(opcode, "!D") == 0)
+    } else if (strcmp(opcode, "!D") == 0)
         return COMP_NOT_D;
     else if (strcmp(opcode, "!A") == 0)
         return COMP_NOT_A;
@@ -56,8 +54,8 @@ uint16_t scan_opc(char *opcode, enum op_type type){
         return COMP_D_AND_A;
     else if (strcmp(opcode, "D|A") == 0)
         return COMP_D_OR_A;
-    else if (strcmp(opcode, "M") == 0){
-        switch (type){
+    else if (strcmp(opcode, "M") == 0) {
+        switch (type) {
             case COMP:
                 return COMP_M;
             case DEST:
@@ -66,8 +64,7 @@ uint16_t scan_opc(char *opcode, enum op_type type){
                 break;
         }
 
-    }
-    else if (strcmp(opcode, "!M") == 0)
+    } else if (strcmp(opcode, "!M") == 0)
         return COMP_NOT_M;
     else if (strcmp(opcode, "-M") == 0)
         return COMP_MINUS_M;

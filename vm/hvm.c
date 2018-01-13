@@ -56,7 +56,7 @@ static void decode(uint16_t instr, HVMData *hdt) {
     hdt->jmp = (uint8_t) (instr & 0x07); // 0000000000000111
 
     /* turn machine state execute */
-    hdt->ex_state = TRUE;
+    hdt->exec = TRUE;
 }
 
 #define SWITCH_CASE_DEST(OPCODE, ptrVmData, COMP)       \
@@ -300,18 +300,20 @@ int main(int argc, char *argv[]) {
 
     uint16_t instr;
     HVMData hdt = {
-            .ex_state=FALSE,
+            .exec=FALSE,
             .pc=0};
 
     while (running) {
+        // Fetch State
         instr = fetch(&hdt);
 
         if (instr == INVALID)
             break;
-
+        // Decode State
         decode(instr, &hdt);
-        if (hdt.ex_state) {
-            hdt.ex_state = FALSE;
+        if (hdt.exec) {
+            hdt.exec = FALSE;
+            // Execute State
             execute(&hdt);
         }
     }

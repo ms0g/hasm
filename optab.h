@@ -1,14 +1,15 @@
 #ifndef HASM_OPTAB_H
 #define HASM_OPTAB_H
 
-enum op_type{
+enum op_type {
     COMP,
     DEST,
     _JMP
 };
 
 /**
- * scan opcodes
+ * Scan opcodes
  */
-uint16_t scan_opc(char *opcode, enum op_type type);
+uint16_t scan_opc(const char *opcode, const enum op_type type);
+
 #endif //HASM_OPTAB_H

@@ -11,8 +11,10 @@
 
 /* buffer to keep binary field */
 static uint16_t byte_buff;
+
 /* address counter for label operands */
 static uint16_t LC;
+
 /* RAM[16] */
 static uint16_t RAM_ADDR = 0x0010;
 
@@ -22,9 +24,9 @@ void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
     FILE *int_file;
     struct Symbol *sym;
     char *tk;
-    tk =  buff;
+    tk = buff;
 
-    memset(label,0,100);
+    memset(label, 0, 100);
 
     // create intermediate file
     strcat(file_name, ".int");
@@ -40,19 +42,18 @@ void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
             *buff == '\n')
             continue;
 
-        int i=0;
+        int i = 0;
         switch (buff[0]) {
             case '(':
                 // (LOOP)
-
                 while (*(++tk) != ')')
                     label[i++] = *tk;
                 insert_symtab(sym_tbl, label, LC);
                 // flush buff
-                memset(buff,0,100);
-                memset(label,0,100);
+                memset(buff, 0, 100);
+                memset(label, 0, 100);
                 // set pointer again
-                tk =  buff;
+                tk = buff;
                 break;
             case '@':
                 // @2
@@ -76,16 +77,14 @@ void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
         }
     }
     hfclose(int_file);
-    hfclose(src_file);
 }
 
 /* pass 2 */
 void init_synthesis(char *fname, struct Symbol **sym_tbl) {
     char buff[BUFF];
-    char  *token, *instr_fields[2];
+    char *token, *instr_fields[2];
     unsigned short dest, comp, jmp;
     struct Symbol *sym;
-    FILE *ifile,*ofile;
 
     // int file
     ifile = hfopen(fname, "r");
@@ -129,19 +128,11 @@ void init_synthesis(char *fname, struct Symbol **sym_tbl) {
                 byte_buff |= (comp << 6 | jmp);
             }
         }
-        write_ofile(ofile);
 
+        // keep byte order.Must be big-endian
+        byte_buff = read_msb(byte_buff);
+        hfwrite(&byte_buff, sizeof(byte_buff), 1, ofile);
+        // reset buff
+        byte_buff &= ~byte_buff;
     }
-    hfclose(ifile);
-    hfclose(ofile);
 }
-
-void write_ofile(FILE *ofile){
-    // keep byte order.Must be big-endian
-    byte_buff = read_msb(byte_buff);
-    hfwrite(&byte_buff, sizeof(byte_buff), 1, ofile);
-    // reset buff
-    byte_buff &= ~byte_buff;
-
-}
-
