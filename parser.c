@@ -4,6 +4,7 @@
 #include "parser.h"
 #include "hdr.h"
 #include "optab.h"
+#include "tokenizer.h"
 #include "lib/hasmlib.h"
 
 #define BUFF 1080
@@ -18,15 +19,15 @@ static uint16_t LC;
 /* RAM[16] */
 static uint16_t RAM_ADDR = 0x0010;
 
+
 /* pass 1 */
 void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
-    char buff[BUFF], label[100];
+    char buff[BUFF], token[100];
     FILE *int_file;
     struct Symbol *sym;
-    char *tk;
-    tk = buff;
+    int tok_type;
 
-    memset(label, 0, 100);
+    memset(token, 0, 100);
 
     // create intermediate file
     strcat(file_name, ".int");
@@ -36,41 +37,29 @@ void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
         sscanf(buff, "%s", buff);
 
         // ignore comments,spaces
-        if (*buff == '/' ||
-            *buff == '\r' ||
-            isspace(*buff) ||
-            *buff == '\n')
+        if (*buff == '/' || is_space(buff))
             continue;
 
-        int i = 0;
-        switch (buff[0]) {
-            case '(':
-                // (LOOP)
-                while (*(++tk) != ')')
-                    label[i++] = *tk;
-                insert_symtab(sym_tbl, label, LC);
-                // flush buff
-                memset(buff, 0, 100);
-                memset(label, 0, 100);
-                // set pointer again
-                tk = buff;
+        init_tokenizing(buff, token, &tok_type, NULL, ANALYSIS);
+
+        switch (tok_type) {
+            case LABEL:
+                insert_symtab(sym_tbl, token, LC);
                 break;
-            case '@':
-                // @2
-                if (isdigit(buff[1])) {
-                    break;
-                } else {
-                    // @i
-                    if (islower(buff[1])) {
-                        sym = scan_symtab(*sym_tbl, &buff[1]);
-                        if (!sym)
-                            insert_symtab(sym_tbl, &buff[1], RAM_ADDR++);
-                    }
-                }
+            case A_INS:
+                sym = scan_symtab(*sym_tbl, token);
+                if (!sym)
+                    insert_symtab(sym_tbl, token, RAM_ADDR++);
+                break;
+            case C_INS:
             default:
                 break;
         }
-        if (buff[0] != '\0') {
+
+
+        memset(token, 0, 100);
+
+        if (tok_type != LABEL) {
             fprintf(int_file, "%s\n", buff);
             // increase ROM address
             ++LC;
@@ -81,10 +70,10 @@ void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
 
 /* pass 2 */
 void init_synthesis(char *fname, struct Symbol **sym_tbl) {
-    char buff[BUFF];
-    char *token, *instr_fields[2];
+    char buff[BUFF], token[100];
     unsigned short dest, comp, jmp;
     struct Symbol *sym;
+    int tok_type;
 
     // int file
     ifile = hfopen(fname, "r");
@@ -98,35 +87,32 @@ void init_synthesis(char *fname, struct Symbol **sym_tbl) {
     write_hdr(ofile);
 
     while (fgets(buff, sizeof(buff), ifile) != NULL) {
+        C c_inst = {.comp="", .dest="", .jmp=""};
+
         sscanf(buff, "%s", buff);
 
-        if (buff[0] == '@') {
-            // operand parse
-            if (!isdigit(buff[1])) {
-                sym = scan_symtab(*sym_tbl, &buff[1]);
-                if (sym) {
-                    byte_buff |= sym->addr;
-                }
-            } else
-                byte_buff = (uint16_t) atoi(&buff[1]);
-        } else {
-            // opcode parse
-            token = strchr(&buff[0], '=');
-            if (token) {
-                instr_fields[0] = strtok(&buff[0], "=");
-                instr_fields[1] = strtok(NULL, "=");
-                dest = scan_opc(instr_fields[0], DEST);
-                comp = scan_opc(instr_fields[1], COMP);
+        init_tokenizing(buff, token, &tok_type, &c_inst, SYNTHESIS);
 
-                byte_buff |= (dest << 3 | comp << 6);
-            } else {
-                instr_fields[0] = strtok(&buff[0], ";");
-                instr_fields[1] = strtok(NULL, ";");
-                comp = scan_opc(instr_fields[0], COMP);
-                jmp = scan_opc(instr_fields[1], _JMP);
+        switch (tok_type) {
+            case A_INS:
+                sym = scan_symtab(*sym_tbl, token);
+                if (sym) byte_buff |= sym->addr;
+                break;
+            case C_INS:
+                dest = scan_opc(c_inst.dest, DEST);
+                comp = scan_opc(c_inst.comp, COMP);
+                jmp = scan_opc(c_inst.jmp, _JMP);
 
-                byte_buff |= (comp << 6 | jmp);
-            }
+                if (dest && comp)
+                    byte_buff |= (dest << 3 | comp << 6);
+                else
+                    byte_buff |= (comp << 6 | jmp);
+                break;
+            case NUMBER:
+                byte_buff = (uint16_t) atoi(token);
+                break;
+            default:
+                break;
         }
 
         // keep byte order.Must be big-endian

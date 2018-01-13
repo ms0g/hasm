@@ -10,6 +10,7 @@ set(SOURCE_FILES
         hdr.c hdr.h
         optab.c optab.h
         symtab.c symtab.h
+        tokenizer.c tokenizer.h
         lib/hasmlib.c lib/hasmlib.h
         lib/hopcodes.h
         )

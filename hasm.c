@@ -8,6 +8,7 @@
 
 
 FILE *src_file = NULL;
+
 struct Symbol *sym_tbl = NULL;
 
 void cleanup();
