@@ -5,10 +5,13 @@ The platform is a 16-bit von Neumann machine, consisting of a CPU,two separate m
 
 The machine language is based on two 16-bit command types. The address instruction has the format 0xxxxxxxxxxxxxxx.
 This instruction causes the computer to load the 15-bit constant xxx...x into the A-register. The compute instruction has the format 111accccccdddjjj. The a and c-bits instruct the ALU which function to compute, the d-bits instruct where to store the ALU output, and the j-bits specify an optional jump condition.
-
-### How to use
+### Building
 ```bash
-➜  ~ make
+mkdir build && cd build
+cmake .. && cmake --build .
+```
+### Usage
+```bash
 ➜  ~ ./hasm [inputfile.asm]
 ```
 
@@ -16,7 +19,9 @@ Assembling process has two passes.The first pass scans source code,inserts label
 
 To run hack program
 ```bash
-➜  ~ make hvm
+➜ cd vm
+➜ mkdir build && cd build
+➜ cmake .. && cmake --build .
 ➜  ~ ./hvm [inputfile.hex]
 ```
 
