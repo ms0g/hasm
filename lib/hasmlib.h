@@ -2,7 +2,7 @@
 #define HASM_HASMLIB_H
 #include <stdio.h>
 
-#define read_msb(_val_) (_val_ << 8)|(_val_ >> 8) /* read byte MSB */
+#define read_msb(_val_) (((_val_) << 8)|((_val_) >> 8)) /* read byte MSB */
 
 void *hmalloc(size_t size);
 FILE* hfopen(const char *fname,const char *modes);

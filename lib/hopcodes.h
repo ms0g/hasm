@@ -24,6 +24,7 @@ enum h_opcodes {
     COMP_NOT_M = 0x3F1,
     COMP_MINUS_M = 0x3F3,
     COMP_M_PLUS_1 = 0x3F7,
+    COMP_M_MINUS_1 = 0x3F2,
     COMP_D_PLUS_M = 0x3C2,
     COMP_D_MINUS_M = 0x3D3,
     COMP_M_MINUS_D = 0x3C7,

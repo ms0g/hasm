@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symtab.h"
-#include "hasmlib.h"
+#include "lib/hasmlib.h"
 
 struct Symbol predef_operands[] = {
         {"R0",     0x0000},

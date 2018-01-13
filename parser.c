@@ -4,6 +4,7 @@
 #include "parser.h"
 #include "hdr.h"
 #include "optab.h"
+#include "lib/hasmlib.h"
 
 #define BUFF 1080
 

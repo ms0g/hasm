@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "hvm.h"
-#include "hasmlib.h"
-#include "hopcodes.h"
+#include "../lib/hopcodes.h"
+#include "../lib/hasmlib.h"
 
 #define TRUE    1
 #define FALSE   0
@@ -154,6 +154,7 @@ static void execute(HVMData *hdt) {
             SWITCH_CASE_DEST(COMP_NOT_M, hdt, ~RAM[hdt->A_REG])
             SWITCH_CASE_DEST(COMP_MINUS_M, hdt, -RAM[hdt->A_REG])
             SWITCH_CASE_DEST(COMP_M_PLUS_1, hdt, ++RAM[hdt->A_REG])
+            SWITCH_CASE_DEST(COMP_M_MINUS_1, hdt, --RAM[hdt->A_REG])
             SWITCH_CASE_DEST(COMP_D_PLUS_M, hdt, (hdt->D_REG + RAM[hdt->A_REG]))
             SWITCH_CASE_DEST(COMP_D_MINUS_M, hdt, (hdt->D_REG - RAM[hdt->A_REG]))
             SWITCH_CASE_DEST(COMP_M_MINUS_D, hdt, (RAM[hdt->A_REG] - hdt->D_REG))
@@ -233,6 +234,7 @@ static void execute(HVMData *hdt) {
             SWITCH_CASE_JMP(COMP_NOT_M, hdt, ~RAM[hdt->A_REG])
             SWITCH_CASE_JMP(COMP_MINUS_M, hdt, -RAM[hdt->A_REG])
             SWITCH_CASE_JMP(COMP_M_PLUS_1, hdt, ++RAM[hdt->A_REG])
+            SWITCH_CASE_JMP(COMP_M_MINUS_1, hdt, --RAM[hdt->A_REG])
             SWITCH_CASE_JMP(COMP_D_PLUS_M, hdt, (hdt->D_REG + RAM[hdt->A_REG]))
             SWITCH_CASE_JMP(COMP_D_MINUS_M, hdt, (hdt->D_REG - RAM[hdt->A_REG]))
             SWITCH_CASE_JMP(COMP_M_MINUS_D, hdt, (RAM[hdt->A_REG] - hdt->D_REG))

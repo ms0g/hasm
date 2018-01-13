@@ -4,7 +4,7 @@
 #include <string.h>
 #include <getopt.h>
 #include "parser.h"
-#include "hasmlib.h"
+#include "lib/hasmlib.h"
 
 int main(int argc, char *argv[]) {
     int opt;

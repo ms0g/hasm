@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "optab.h"
-#include "hopcodes.h"
+#include "lib/hopcodes.h"
 
 uint16_t scan_opc(char *opcode, enum op_type type){
     if (strcmp(opcode, "0") == 0)
@@ -73,6 +73,8 @@ uint16_t scan_opc(char *opcode, enum op_type type){
         return COMP_MINUS_M;
     else if (strcmp(opcode, "M+1") == 0)
         return COMP_M_PLUS_1;
+    else if (strcmp(opcode, "M-1") == 0)
+        return COMP_M_MINUS_1;
     else if (strcmp(opcode, "D+M") == 0)
         return COMP_D_PLUS_M;
     else if (strcmp(opcode, "D-M") == 0)

@@ -1,7 +1,7 @@
 #ifndef HASM_HDR_H
 #define HASM_HDR_H
 #include <stdint.h>
-#include "hasmlib.h"
+#include "lib/hasmlib.h"
 
 
 typedef struct {
