@@ -36,8 +36,6 @@ static int is_CIns(const char *str) {
 
 void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int state) {
     char *inst[2];
-    int i = 0;
-    char *next;
 
     if (is_CIns(buf)) {
         if (state == SYNTHESIS) {
@@ -56,6 +54,7 @@ void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int
         *tok_type = C_INS;
     } else if (is_label(buf)) {
         // (LOOP)
+        int i = 0;
         while (*(++buf) != ')')
             token[i++] = *buf;
         *tok_type = LABEL;
@@ -64,6 +63,7 @@ void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int
         inst[0] = strtok(buf, "@");
         inst[1] = strtok(NULL, "@");
 
+        char *next;
         strtol(inst[0], &next, 10);
 
         // check out if it's decimal number or symbol
