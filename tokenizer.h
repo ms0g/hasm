@@ -20,6 +20,9 @@ enum state {
     SYNTHESIS
 };
 
+/**
+ * C ins fields
+ */
 typedef struct {
     char *comp;
     char *dest;
@@ -27,14 +30,13 @@ typedef struct {
 
 } C;
 
-int is_space(const char *str);
-
 /**
  * Check tokens
  */
 static int is_label(const char *str);
 static int is_AIns(const char *str);
 static int is_CIns(const char *str);
+int is_space(const char *str);
 static int check_match(const char *str, const char *rgx);
 
 /**
