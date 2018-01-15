@@ -40,7 +40,7 @@ void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
         if (*buff == '/' || is_space(buff))
             continue;
 
-        init_tokenizing(buff, token, &tok_type, NULL, ANALYSIS);
+        init_tokenizing(buff, token, &tok_type, NULL, pass1);
 
         switch (tok_type) {
             case LABEL:
@@ -91,7 +91,7 @@ void init_synthesis(char *fname, struct Symbol **sym_tbl) {
 
         sscanf(buff, "%s", buff);
 
-        init_tokenizing(buff, token, &tok_type, &c_inst, SYNTHESIS);
+        init_tokenizing(buff, token, &tok_type, &c_inst, pass2);
 
         switch (tok_type) {
             case A_INS:
@@ -99,17 +99,15 @@ void init_synthesis(char *fname, struct Symbol **sym_tbl) {
                 if (sym) byte_buff |= sym->addr;
                 break;
             case C_INS:
-                dest = scan_opc(c_inst.dest, DEST);
-                comp = scan_opc(c_inst.comp, COMP);
-                jmp = scan_opc(c_inst.jmp, _JMP);
+                dest = scan_opc(c_inst.dest, hasm_dest);
+                comp = scan_opc(c_inst.comp, hasm_comp);
+                jmp = scan_opc(c_inst.jmp, hasm_jmp);
 
-                if (dest && comp)
-                    byte_buff |= (dest << 3 | comp << 6);
-                else
-                    byte_buff |= (comp << 6 | jmp);
+                byte_buff |= (dest && comp) ? (dest << 3 | comp << 6) :
+                             (comp << 6 | jmp);
                 break;
             case NUMBER:
-                byte_buff = (uint16_t) atoi(token);
+                byte_buff |= (uint16_t) atoi(token);
                 break;
             default:
                 break;

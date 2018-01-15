@@ -10,19 +10,13 @@ enum tokens {
     NUMBER
 };
 
-/**
- * Assembler state:
- * analysis=pass1
- * synthesis=pass2
- */
+/* Assembler state */
 enum state {
-    ANALYSIS,
-    SYNTHESIS
+    pass1,
+    pass2
 };
 
-/**
- * C ins fields
- */
+/* C ins fields */
 typedef struct {
     char *comp;
     char *dest;
@@ -30,18 +24,14 @@ typedef struct {
 
 } C;
 
-/**
- * Check tokens
- */
+/* Check tokens */
 static int is_label(const char *str);
 static int is_AIns(const char *str);
 static int is_CIns(const char *str);
 int is_space(const char *str);
 static int check_match(const char *str, const char *rgx);
 
-/**
- * Initialize tokenizing
- */
+/* Initialize tokenizing */
 void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int state);
 
 #endif //HASM_TOKENIZER_H

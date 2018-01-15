@@ -4,7 +4,7 @@
 #include "symtab.h"
 #include "lib/hasmlib.h"
 
-struct Symbol predef_operands[] = {
+const struct Symbol predef_operands[] = {
         {"R0",     0x0000},
         {"R1",     0x0001},
         {"R2",     0x0002},

@@ -12,18 +12,18 @@ uint16_t scan_opc(const char *opcode, const enum op_type type) {
         return COMP_MINUS_1;
     else if (strcmp(opcode, "D") == 0) {
         switch (type) {
-            case COMP:
+            case hasm_comp:
                 return COMP_D;
-            case DEST:
+            case hasm_dest:
                 return DEST_D;
             default:
                 break;
         }
     } else if (strcmp(opcode, "A") == 0) {
         switch (type) {
-            case COMP:
+            case hasm_comp:
                 return COMP_A;
-            case DEST:
+            case hasm_dest:
                 return DEST_A;
             default:
                 break;
@@ -56,9 +56,9 @@ uint16_t scan_opc(const char *opcode, const enum op_type type) {
         return COMP_D_OR_A;
     else if (strcmp(opcode, "M") == 0) {
         switch (type) {
-            case COMP:
+            case hasm_comp:
                 return COMP_M;
-            case DEST:
+            case hasm_dest:
                 return DEST_M;
             default:
                 break;

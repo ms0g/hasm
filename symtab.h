@@ -4,38 +4,26 @@
 #include <stdint.h>
 
 
-/**
- * Symbol tree
- */
+/* Symbol tree */
 struct Symbol {
     char operand[50];
     uint16_t addr:16;
     struct Symbol *left, *right;
 };
 
-/**
- * Predefined symbols
- */
-extern struct Symbol predef_operands[];
+/* Predefined symbols */
+const struct Symbol predef_operands[];
 
-/**
- * Insert new symbol to tree
- */
+/* Insert new symbol to tree */
 void insert_symtab(struct Symbol **node, const char *symbol, unsigned short addr);
 
-/**
- * Search symbols
- */
+/* Search symbols */
 struct Symbol *scan_symtab(struct Symbol *root, const char *symbol);
 
-/**
- * Initialize tree via predefined operands
- */
+/* Initialize the tree via predefined operands */
 void init_symtab(struct Symbol **sym_table);
 
-/**
- * Cleanup tree recursively
- */
+/* Cleanup tree recursively */
 void cleanup_symtab(struct Symbol **sym_table);
 
 #endif //HASM_SYMBOL_TABLE_H

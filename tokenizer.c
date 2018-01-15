@@ -5,8 +5,9 @@
 #include <ctype.h>
 #include "tokenizer.h"
 
-/** Tokens regex */
+/* Tokens regex */
 static const char *at_token = "^@[[:alnum:]]";
+static const char *at_num_token = "^@[[:digit:]]";
 static const char *at_var_token = "^@[[:lower:]]";
 static const char *label_token = "^\([A-Z]*\)";
 static const char *comp_dest_token = "^[[:upper:]]=[[:alnum:]]";
@@ -37,20 +38,19 @@ static int is_CIns(const char *str) {
 void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int state) {
     char *inst[2];
 
-    if (is_CIns(buf)) {
-        if (state == SYNTHESIS) {
-            if (check_match(buf, comp_dest_token)) {
-                inst[0] = strtok(buf, "=");
-                inst[1] = strtok(NULL, "=");
-                c_inst->dest = inst[0];
-                c_inst->comp = inst[1];
-            } else {
-                inst[0] = strtok(buf, ";");
-                inst[1] = strtok(NULL, ";");
-                c_inst->comp = inst[0];
-                c_inst->jmp = inst[1];
-            }
+    if (is_CIns(buf) && state == pass2) {
+        if (check_match(buf, comp_dest_token)) {
+            inst[0] = strtok(buf, "=");
+            inst[1] = strtok(NULL, "=");
+            c_inst->dest = inst[0];
+            c_inst->comp = inst[1];
+        } else {
+            inst[0] = strtok(buf, ";");
+            inst[1] = strtok(NULL, ";");
+            c_inst->comp = inst[0];
+            c_inst->jmp = inst[1];
         }
+
         *tok_type = C_INS;
     } else if (is_label(buf)) {
         // (LOOP)
@@ -61,21 +61,17 @@ void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int
     } else if (is_AIns(buf)) {
         // split with @
         inst[0] = strtok(buf, "@");
-        inst[1] = strtok(NULL, "@");
 
-        char *next;
-        strtol(inst[0], &next, 10);
+        if (check_match(buf, at_num_token)) {
+            *tok_type = (state == pass2) ? NUMBER : -1;
+        } else if (check_match(buf, at_var_token))
+            // if it's var(@i)
+            *tok_type = A_INS;
+        else {
+            // if it's label(@LOOP) operand
+            *tok_type = (state == pass2) ? A_INS : -1;
+        }
 
-        // check out if it's decimal number or symbol
-        if ((next == inst[0]) || (*next != '\0')) {
-            // check out if it's var or label operand
-            if (check_match(inst[0], at_var_token))
-                *tok_type = A_INS;
-            else {
-                if (state == SYNTHESIS) *tok_type = A_INS;
-                else *tok_type = NUMBER;
-            }
-        } else *tok_type = NUMBER;
         strcpy(token, inst[0]);
     }
 }

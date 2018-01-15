@@ -9,14 +9,8 @@
 
 FILE *src_file = NULL;
 
-/**
- * Symbol table
- */
+/* Symbol table */
 struct Symbol *sym_tbl = NULL;
-
-/**
- * Cleanup
- */
 void cleanup();
 
 int main(int argc, char *argv[]) {
