@@ -7,7 +7,7 @@
 #include "lib/hasmlib.h"
 
 
-FILE *src_file = NULL;
+FILE *srcfp = NULL;
 
 /* Symbol table */
 struct Symbol *sym_tbl = NULL;
@@ -33,15 +33,15 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    src_file = hfopen(argv[optind], "r");
+    srcfp = hfopen(argv[optind], "r");
 
-    assert(src_file != NULL);
+    assert(srcfp != NULL);
 
     // initializing symbol table
     init_symtab(&sym_tbl);
 
     // pass 1
-    init_analysis(src_file, argv[optind], &sym_tbl);
+    init_analysis(srcfp, argv[optind], &sym_tbl);
 
     // pass 2
     init_synthesis(argv[optind], &sym_tbl);
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
 
 void cleanup() {
     cleanup_symtab(&sym_tbl);
-    hfclose(src_file);
-    hfclose(ifile);
-    hfclose(ofile);
+    hfclose(srcfp);
+    hfclose(intfp);
+    hfclose(outfp);
 }

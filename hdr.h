@@ -23,6 +23,6 @@ typedef struct {
 #define P_OFF read_msb(0x08) /* Program offset */
 
 /* Write header */
-void write_hdr(FILE *ofile);
+void write_hdr(FILE *ofp);
 
 #endif //HASM_HDR_H

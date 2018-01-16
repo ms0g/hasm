@@ -22,17 +22,17 @@ FILE* hfopen(const char *fname, const char *modes){
     return f;
 }
 
-size_t hfwrite(const void *ptr, size_t size, size_t count, FILE *stream){
-    size_t c = fwrite(ptr, size, count, stream);
-    if (ferror(stream)) {
+size_t hfwrite(const void *ptr, size_t size, size_t count, FILE *fp){
+    size_t c = fwrite(ptr, size, count, fp);
+    if (ferror(fp)) {
         fprintf(stderr, "error writing to file");
-        hfclose(stream);
+        hfclose(fp);
     }
     return c;
 }
 
-int hfclose(FILE *stream){
-    if(fclose(stream) == EOF){
+int hfclose(FILE *fp){
+    if(fclose(fp) == EOF){
         fprintf(stderr, "error closing file");
         return EOF;
     }

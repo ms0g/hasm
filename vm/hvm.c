@@ -10,53 +10,53 @@
 #include "../lib/hopcodes.h"
 #include "../lib/hasmlib.h"
 
-#define TRUE    1
-#define FALSE   0
 #define INVALID (-1)
 #define P_OFF 0x8 /* program offset */
 
 /* Current state of machine */
-int running = TRUE;
+int running = 1;
 
-/* VM initialization */
 static void vm_init(char *arg) {
     uint16_t buff;
     int ind = 0;
 
-    FILE *hex;
-    hex = hfopen(arg, "rb");
+    FILE *hexfp;
+    hexfp = hfopen(arg, "rb");
 
-    assert(hex != NULL);
+    assert(hexfp != NULL);
 
-    /* jump program offset */
-    fseek(hex, P_OFF, SEEK_SET);
-    while (fread(&buff, sizeof(buff), 1, hex) != 0) {
+    memset(RAM,0, sizeof(RAM));
+    memset(ROM,0, sizeof(ROM));
+
+    // jump program offset
+    fseek(hexfp, P_OFF, SEEK_SET);
+    while (fread(&buff, sizeof(buff), 1, hexfp) != 0) {
         ROM[ind++] = read_msb(buff);
     }
-    /* our end-of-program signature */
+    // our end-of-program signature
     ROM[ind] = (uint16_t) EOF;
-    hfclose(hex);
+    hfclose(hexfp);
 }
 
-/* Fetch */
 static uint16_t fetch(HVMData *hdt) {
+    hdt->state = hvm_fetch;
     return ROM[hdt->pc++];
 }
 
-/* Decode */
 static void decode(uint16_t instr, HVMData *hdt) {
-    /* check instr first significant 3 bits.If 111 it is C instr,otherwise A instr */
+    // check instr first significant 3 bits.If 111 it is C instr,otherwise A instr
     if (((instr & 0xE000) >> 13) ^ 0x7) {
+        hdt->state = hvm_decode;
         hdt->A_REG = instr;
         return;
     }
-    /* extract comp,dest,jmp parts of instr */
+    // extract comp,dest,jmp parts of instr
     hdt->comp = (uint16_t) ((instr & 0xFFC0) >> 6); // 1111111111000000
     hdt->dest = (uint8_t) ((instr & 0x38) >> 3); //  0000000000111000
     hdt->jmp = (uint8_t) (instr & 0x07); // 0000000000000111
 
-    /* turn machine state execute */
-    hdt->exec = TRUE;
+    // turn machine state execute
+    hdt->state = hvm_execute;
 }
 
 #define SWITCH_CASE_DEST(OPCODE, ptrVmData, COMP)       \
@@ -128,7 +128,6 @@ static void decode(uint16_t instr, HVMData *hdt) {
         break;                                                  \
 
 
-/* Execute */
 static void execute(HVMData *hdt) {
     if (!(hdt->jmp ^ 0x0)) {
         switch (hdt->comp) {
@@ -162,7 +161,7 @@ static void execute(HVMData *hdt) {
             SWITCH_CASE_DEST(COMP_D_OR_M, hdt, (hdt->D_REG | RAM[hdt->A_REG]))
 
             default:
-                running = FALSE;
+                running = 0;
                 break;
         }
     } else {
@@ -242,7 +241,7 @@ static void execute(HVMData *hdt) {
             SWITCH_CASE_JMP(COMP_D_OR_M, hdt, (hdt->D_REG | RAM[hdt->A_REG]))
 
             default:
-                running = FALSE;
+                running = 0;
                 break;
         }
 
@@ -300,7 +299,7 @@ int main(int argc, char *argv[]) {
 
     uint16_t instr;
     HVMData hdt = {
-            .exec=FALSE,
+            .state=-1,
             .pc=0};
 
     while (running) {
@@ -311,8 +310,8 @@ int main(int argc, char *argv[]) {
             break;
         // Decode State
         decode(instr, &hdt);
-        if (hdt.exec) {
-            hdt.exec = FALSE;
+        if (hdt.state == hvm_execute) {
+            hdt.state = hvm_fetch;
             // Execute State
             execute(&hdt);
         }

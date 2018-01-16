@@ -13,34 +13,30 @@ struct HVMData_ {
     uint8_t jmp:3;
     int16_t A_REG:16;
     int16_t D_REG:16;
-    int exec;
+    int state;
     int pc;
 };
 typedef struct HVMData_ HVMData;
 
-/**
- * Memory
- */
+enum hvm_state {
+    hvm_fetch,
+    hvm_decode,
+    hvm_execute
+};
+
+/* Memory */
 uint16_t ROM[ROM_SIZE];
 int16_t RAM[RAM_SIZE];
 
-/**
- * Vm init
- */
+/* Initialize VM */
 static void vm_init(char *arg);
 
-/**
- * VM State: Fetch, Decode, Execute
- */
+/* VM State: Fetch, Decode, Execute */
 static uint16_t fetch(HVMData *hdt);
-
 static void decode(uint16_t instr, HVMData *hdt);
-
 static void execute(HVMData *hdt);
 
-/**
- * Memory snapshot
- */
+/* Memory snapshot */
 static void snapshot(HVMData *hdt);
 
 #endif //HVM_HVM_H

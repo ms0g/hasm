@@ -21,7 +21,7 @@ static uint16_t RAM_ADDR = 0x0010;
 
 
 /* pass 1 */
-void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
+void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
     char buff[BUFF], token[100];
     FILE *int_file;
     struct Symbol *sym;
@@ -33,7 +33,7 @@ void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
     strcat(file_name, ".int");
     int_file = hfopen(file_name, "w");
 
-    while (fgets(buff, sizeof(buff), src_file) != NULL) {
+    while (fgets(buff, sizeof(buff), srcfp) != NULL) {
         sscanf(buff, "%s", buff);
 
         // ignore comments,spaces
@@ -56,7 +56,7 @@ void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
                 break;
         }
 
-
+        // flush buffer
         memset(token, 0, 100);
 
         if (tok_type != LABEL) {
@@ -69,24 +69,24 @@ void init_analysis(FILE *src_file, char *file_name, struct Symbol **sym_tbl) {
 }
 
 /* pass 2 */
-void init_synthesis(char *fname, struct Symbol **sym_tbl) {
+void init_synthesis(char *file_name, struct Symbol **sym_tbl) {
     char buff[BUFF], token[100];
     unsigned short dest, comp, jmp;
     struct Symbol *sym;
     int tok_type;
 
     // int file
-    ifile = hfopen(fname, "r");
+    intfp = hfopen(file_name, "r");
 
-    char *t = strchr(fname, '.');
+    char *t = strchr(file_name, '.');
     *t = '\0';
-    strcat(fname, ".hex");
+    strcat(file_name, ".hex");
     // output file
-    ofile = hfopen(fname, "wb");
+    outfp = hfopen(file_name, "wb");
 
-    write_hdr(ofile);
+    write_hdr(outfp);
 
-    while (fgets(buff, sizeof(buff), ifile) != NULL) {
+    while (fgets(buff, sizeof(buff), intfp) != NULL) {
         C c_inst = {.comp="", .dest="", .jmp=""};
 
         sscanf(buff, "%s", buff);
@@ -115,7 +115,7 @@ void init_synthesis(char *fname, struct Symbol **sym_tbl) {
 
         // keep byte order.Must be big-endian
         byte_buff = read_msb(byte_buff);
-        hfwrite(&byte_buff, sizeof(byte_buff), 1, ofile);
+        hfwrite(&byte_buff, sizeof(byte_buff), 1, outfp);
         // reset buff
         byte_buff &= ~byte_buff;
     }

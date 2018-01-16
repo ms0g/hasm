@@ -19,21 +19,17 @@ int is_space(const char *str) {
     return check_match(str, space);
 }
 
-
 static int is_label(const char *str) {
     return check_match(str, label_token);
 }
-
 
 static int is_AIns(const char *str) {
     return check_match(str, at_token);
 }
 
-
 static int is_CIns(const char *str) {
     return check_match(str, comp_dest_token) || check_match(str, comp_jmp_token);
 }
-
 
 void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int state) {
     char *inst[2];
