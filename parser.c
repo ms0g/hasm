@@ -48,8 +48,7 @@ void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
                 break;
             case A_INS:
                 sym = scan_symtab(*sym_tbl, token);
-                if (!sym)
-                    insert_symtab(sym_tbl, token, RAM_ADDR++);
+                (!sym) ? insert_symtab(sym_tbl, token, RAM_ADDR++) : NULL;
                 break;
             case C_INS:
             default:
@@ -96,7 +95,7 @@ void init_synthesis(char *file_name, struct Symbol **sym_tbl) {
         switch (tok_type) {
             case A_INS:
                 sym = scan_symtab(*sym_tbl, token);
-                if (sym) byte_buff |= sym->addr;
+                byte_buff |= (sym) ? sym->addr : 0;
                 break;
             case C_INS:
                 dest = scan_opc(c_inst.dest, hasm_dest);

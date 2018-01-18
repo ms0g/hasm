@@ -58,15 +58,15 @@ void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int
         // split with @
         inst[0] = strtok(buf, "@");
 
-        if (check_match(buf, at_num_token)) {
+        if (check_match(buf, at_num_token))
             *tok_type = (state == pass2) ? NUMBER : -1;
-        } else if (check_match(buf, at_var_token))
+        else if (check_match(buf, at_var_token))
             // if it's var(@i)
             *tok_type = A_INS;
-        else {
+        else
             // if it's label(@LOOP) operand
             *tok_type = (state == pass2) ? A_INS : -1;
-        }
+
 
         strcpy(token, inst[0]);
     }
