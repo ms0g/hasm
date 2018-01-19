@@ -25,8 +25,8 @@ static void vm_init(char *arg) {
 
     assert(hexfp != NULL);
 
-    memset(RAM,0, sizeof(RAM));
-    memset(ROM,0, sizeof(ROM));
+    memset(RAM, 0, sizeof(RAM));
+    memset(ROM, 0, sizeof(ROM));
 
     // jump program offset
     fseek(hexfp, P_OFF, SEEK_SET);
@@ -39,7 +39,6 @@ static void vm_init(char *arg) {
 }
 
 static uint16_t fetch(HVMData *hdt) {
-    hdt->state = hvm_fetch;
     return ROM[hdt->pc++];
 }
 
@@ -299,7 +298,7 @@ int main(int argc, char *argv[]) {
 
     uint16_t instr;
     HVMData hdt = {
-            .state=-1,
+            .state=hvm_fetch,
             .pc=0};
 
     while (running) {
