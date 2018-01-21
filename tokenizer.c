@@ -4,6 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "tokenizer.h"
+#include "lib/hasmlib.h"
 
 /* Tokens regex */
 static const char *at_token = "^@[[:alnum:]]";
@@ -79,7 +80,7 @@ static int check_match(const char *str, const char *rgx) {
     char msgbuf[100];
 
     if (regcomp(&regex, rgx, 0)) {
-        fprintf(stderr, "Could not compile regex\n");
+        logging("Could not compile regex\n");
         exit(1);
     }
 
@@ -92,11 +93,11 @@ static int check_match(const char *str, const char *rgx) {
         case 0:
             return 1;
         case REG_NOMATCH:
-            fprintf(stderr, "No match");
+            logging("No match");
             break;
         default:
             regerror(rets, &regex, msgbuf, sizeof(msgbuf));
-            fprintf(stderr, "Regex match failed: %s\n", msgbuf);
+            logging("Regex match failed: %s\n", msgbuf);
             break;
     }
     return 0;
