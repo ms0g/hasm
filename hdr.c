@@ -12,5 +12,5 @@ void write_hdr(FILE *ofp) {
     hdr.h_end = END;
     hdr.p_off = P_OFF;
 
-    hfwrite(&hdr, sizeof(Hex_hdr), 1, ofp);
+    hasm_fwrite(&hdr, sizeof(Hex_hdr), 1, ofp);
 }

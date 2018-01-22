@@ -14,7 +14,7 @@ void hasm_error(const char *fmt, ...) {
 }
 
 
-void *hmalloc(size_t size) {
+void *hasm_malloc(size_t size) {
     void *p = malloc(size);
     if (!p) {
         hasm_error("unable to allocate memory");
@@ -24,7 +24,7 @@ void *hmalloc(size_t size) {
 }
 
 
-FILE *hfopen(const char *fname, const char *modes) {
+FILE *hasm_fopen(const char *fname, const char *modes) {
     FILE *f;
     f = fopen(fname, modes);
     if (!f) {
@@ -34,16 +34,16 @@ FILE *hfopen(const char *fname, const char *modes) {
     return f;
 }
 
-size_t hfwrite(const void *ptr, size_t size, size_t count, FILE *fp) {
+size_t hasm_fwrite(const void *ptr, size_t size, size_t count, FILE *fp) {
     size_t c = fwrite(ptr, size, count, fp);
     if (ferror(fp)) {
         hasm_error("error writing to file");
-        hfclose(fp);
+        hasm_fclose(fp);
     }
     return c;
 }
 
-int hfclose(FILE *fp) {
+int hasm_fclose(FILE *fp) {
     if (fclose(fp) == EOF) {
         hasm_error("error closing file");
         return EOF;

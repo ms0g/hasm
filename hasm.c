@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    srcfp = hfopen(argv[optind], "r");
+    srcfp = hasm_fopen(argv[optind], "r");
 
     assert(srcfp != NULL);
 
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 
 void cleanup() {
     cleanup_symtab(&sym_tbl);
-    hfclose(srcfp);
-    hfclose(intfp);
-    hfclose(outfp);
+    hasm_fclose(srcfp);
+    hasm_fclose(intfp);
+    hasm_fclose(outfp);
 }

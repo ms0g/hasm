@@ -21,7 +21,7 @@ static void vm_init(char *arg) {
     int ind = 0;
 
     FILE *hexfp;
-    hexfp = hfopen(arg, "rb");
+    hexfp = hasm_fopen(arg, "rb");
 
     assert(hexfp != NULL);
 
@@ -35,7 +35,7 @@ static void vm_init(char *arg) {
     }
     // our end-of-program signature
     ROM[ind] = (uint16_t) EOF;
-    hfclose(hexfp);
+    hasm_fclose(hexfp);
 }
 
 static uint16_t fetch(HVMData *hdt) {

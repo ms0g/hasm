@@ -31,7 +31,7 @@ void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
 
     // create intermediate file
     strcat(file_name, ".int");
-    int_file = hfopen(file_name, "w");
+    int_file = hasm_fopen(file_name, "w");
 
     while (fgets(buff, sizeof(buff), srcfp) != NULL) {
         sscanf(buff, "%s", buff);
@@ -64,7 +64,7 @@ void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
             ++LC;
         }
     }
-    hfclose(int_file);
+    hasm_fclose(int_file);
 }
 
 /* pass 2 */
@@ -75,13 +75,13 @@ void init_synthesis(char *file_name, struct Symbol **sym_tbl) {
     int tok_type;
 
     // int file
-    intfp = hfopen(file_name, "r");
+    intfp = hasm_fopen(file_name, "r");
 
     char *t = strchr(file_name, '.');
     *t = '\0';
     strcat(file_name, ".hex");
     // output file
-    outfp = hfopen(file_name, "wb");
+    outfp = hasm_fopen(file_name, "wb");
 
     write_hdr(outfp);
 
@@ -114,7 +114,7 @@ void init_synthesis(char *file_name, struct Symbol **sym_tbl) {
 
         // keep byte order.Must be big-endian
         byte_buff = read_msb(byte_buff);
-        hfwrite(&byte_buff, sizeof(byte_buff), 1, outfp);
+        hasm_fwrite(&byte_buff, sizeof(byte_buff), 1, outfp);
         // reset buff
         byte_buff &= ~byte_buff;
     }
