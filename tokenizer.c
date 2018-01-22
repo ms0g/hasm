@@ -80,7 +80,7 @@ static int check_match(const char *str, const char *rgx) {
     char msgbuf[100];
 
     if (regcomp(&regex, rgx, 0)) {
-        logging("Could not compile regex\n");
+        hasm_error("Could not compile regex\n");
         exit(1);
     }
 
@@ -93,11 +93,11 @@ static int check_match(const char *str, const char *rgx) {
         case 0:
             return 1;
         case REG_NOMATCH:
-            logging("No match");
+            hasm_error("No match");
             break;
         default:
             regerror(rets, &regex, msgbuf, sizeof(msgbuf));
-            logging("Regex match failed: %s\n", msgbuf);
+            hasm_error("Regex match failed: %s\n", msgbuf);
             break;
     }
     return 0;

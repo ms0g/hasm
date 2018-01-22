@@ -4,7 +4,7 @@
 
 #define read_msb(_val_) (((_val_) << 8)|((_val_) >> 8)) /* read byte MSB */
 
-void logging(const char *fmt, ...);
+void hasm_error(const char *fmt, ...);
 void *hmalloc(size_t size);
 int hfclose(FILE *fp);
 FILE* hfopen(const char *fname, const char *modes);
