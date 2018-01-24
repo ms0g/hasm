@@ -283,13 +283,13 @@ int main(int argc, char *argv[]) {
                 printf("%s\n", usage);
                 break;
             default: /* '?' */
-                hasm_error("Usage: %s [file.hex]\n", argv[0]);
+                hasm_error("Usage: %s [file.hex]\n", Error, argv[0]);
                 exit(EXIT_FAILURE);
         }
     }
 
     if (argv[optind] == NULL || strlen(argv[optind]) == 0) {
-        hasm_error("%s\n", usage);
+        hasm_error("%s\n", Error, usage);
         return 0;
     }
 

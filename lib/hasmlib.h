@@ -4,7 +4,14 @@
 
 #define read_msb(_val_) (((_val_) << 8)|((_val_) >> 8)) /* read byte MSB */
 
-void hasm_error(const char *fmt, ...);
+enum error_severity {
+    Fatal,
+    Error,
+    Warning,
+    Info
+};
+
+void hasm_error(const char *fmt,int severity, ...);
 void *hasm_malloc(size_t size);
 int hasm_fclose(FILE *fp);
 FILE* hasm_fopen(const char *fname, const char *modes);
