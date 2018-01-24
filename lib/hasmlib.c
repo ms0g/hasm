@@ -11,7 +11,7 @@ void hasm_error(const char *fmt,int severity, ...) {
     vfprintf(stderr, fmt, args);
     va_end(args);
     fprintf(stderr, "\n");
-    (severity == Fatal) ? exit(EXIT_FAILURE) : NULL;
+    (severity == Fatal || severity == Error) ? exit(EXIT_FAILURE) : NULL;
 }
 
 

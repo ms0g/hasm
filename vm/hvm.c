@@ -284,13 +284,11 @@ int main(int argc, char *argv[]) {
                 break;
             default: /* '?' */
                 hasm_error("Usage: %s [file.hex]\n", Error, argv[0]);
-                exit(EXIT_FAILURE);
         }
     }
 
     if (argv[optind] == NULL || strlen(argv[optind]) == 0) {
         hasm_error("%s\n", Error, usage);
-        return 0;
     }
 
     vm_init(argv[optind]);
