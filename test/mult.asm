@@ -15,13 +15,13 @@ M=0
 D=A
 
 @R0
-M=D
+M=D // R0=3
 
 @2
 D=A
 
 @R1
-M=D
+M=D // R1=2
 (LOOP)
   @R1
   D=M
