@@ -4,7 +4,7 @@
 #include <string.h>
 #include <getopt.h>
 #include "parser.h"
-#include "lib/hasmlib.h"
+#include "utils.h"
 
 
 FILE *srcfp = NULL;

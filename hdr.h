@@ -2,7 +2,7 @@
 #define HASM_HDR_H
 
 #include <stdint.h>
-#include "lib/hasmlib.h"
+#include "utils.h"
 
 /* hack exec file header */
 typedef struct {

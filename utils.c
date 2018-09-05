@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "hasmlib.h"
+#include "utils.h"
 
 
 void hasm_error(const char *fmt,int severity, ...) {

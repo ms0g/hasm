@@ -11,8 +11,7 @@ struct Symbol {
     struct Symbol *left, *right;
 };
 
-/* Predefined symbols */
-const struct Symbol predef_operands[];
+
 
 /* Insert new symbol to tree */
 void insert_symtab(struct Symbol **node, const char *symbol, unsigned short addr);

@@ -5,9 +5,17 @@
 #include "hdr.h"
 #include "optab.h"
 #include "tokenizer.h"
-#include "lib/hasmlib.h"
+#include "utils.h"
 
 #define BUFF 1080
+
+
+#define ADD_SUFFIX(fname, suf) (strcat(fname, suf))
+
+#define OUTFN(fname)            \
+char *t = strchr(fname, '.');   \
+*t = '\0';                      \
+ADD_SUFFIX(fname, ".hex");
 
 
 /* buffer to keep binary field */
@@ -30,7 +38,7 @@ void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
     memset(token, 0, 100);
 
     // create intermediate file
-    strcat(file_name, ".int");
+    ADD_SUFFIX(file_name, ".int");
     int_file = hasm_fopen(file_name, "w");
 
     while (fgets(buff, sizeof(buff), srcfp) != NULL) {
@@ -77,9 +85,7 @@ void init_synthesis(char *file_name, struct Symbol **sym_tbl) {
     // int file
     intfp = hasm_fopen(file_name, "r");
 
-    char *t = strchr(file_name, '.');
-    *t = '\0';
-    strcat(file_name, ".hex");
+    OUTFN(file_name)
     // output file
     outfp = hasm_fopen(file_name, "wb");
 

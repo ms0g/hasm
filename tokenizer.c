@@ -4,7 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "tokenizer.h"
-#include "lib/hasmlib.h"
+#include "utils.h"
 
 /* Tokens regex */
 static const char *at_token = "^@[[:alnum:]]";
@@ -77,7 +77,6 @@ void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int
 static int check_match(const char *str, const char *rgx) {
     regex_t regex;
     int rets;
-    char msgbuf[100];
 
     if (regcomp(&regex, rgx, 0)) {
         hasm_error("Could not compile regex\n", Error);
@@ -88,16 +87,5 @@ static int check_match(const char *str, const char *rgx) {
     // Free memory allocated to the pattern buffer by regcomp()
     regfree(&regex);
 
-    switch (rets) {
-        case 0:
-            return 1;
-        case REG_NOMATCH:
-            hasm_error("No match", Warning);
-            break;
-        default:
-            regerror(rets, &regex, msgbuf, sizeof(msgbuf));
-            hasm_error("Regex match failed: %s\n", Error, msgbuf);
-            break;
-    }
-    return 0;
+    return rets == 0;
 }

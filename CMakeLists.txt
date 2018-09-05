@@ -11,7 +11,6 @@ set(SOURCE_FILES
         optab.c optab.h
         symtab.c symtab.h
         tokenizer.c tokenizer.h
-        lib/hasmlib.c lib/hasmlib.h
-        lib/hopcodes.h
+        utils.c utils.h
         )
 add_executable(hasm ${SOURCE_FILES})
