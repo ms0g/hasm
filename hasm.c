@@ -11,11 +11,13 @@ FILE *srcfp = NULL;
 
 /* Symbol table */
 struct Symbol *sym_tbl = NULL;
-void cleanup();
+
+static void cleanup();
 
 int main(int argc, char *argv[]) {
     int opt;
     const char *usage = "Usage: ./hasm [file]";
+
     while ((opt = getopt(argc, argv, "h:")) != -1) {
         switch (opt) {
             case 'h':
@@ -27,12 +29,14 @@ int main(int argc, char *argv[]) {
     }
 
     if (argv[optind] == NULL || strlen(argv[optind]) == 0) {
-        hasm_error("%s\n", Error, usage);
+        hasm_error("error: %s: No such file or directory\n", Fatal, argv[optind]);
     }
 
-    srcfp = hasm_fopen(argv[optind], "r");
-
-    assert(srcfp != NULL);
+    if (fd_isreg(argv[optind]) > 0) {
+        srcfp = hasm_fopen(argv[optind], "r");
+    } else {
+        hasm_error("error: %s: No such file or directory\n", Fatal, argv[optind]);
+    }
 
     // initializing symbol table
     init_symtab(&sym_tbl);
@@ -48,7 +52,7 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void cleanup() {
+static void cleanup() {
     cleanup_symtab(&sym_tbl);
     hasm_fclose(srcfp);
     hasm_fclose(intfp);

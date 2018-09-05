@@ -4,7 +4,7 @@
 #include "parser.h"
 #include "hdr.h"
 #include "optab.h"
-#include "tokenizer.h"
+#include "lexer.h"
 #include "utils.h"
 
 #define BUFF 1080
@@ -44,11 +44,8 @@ void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
     while (fgets(buff, sizeof(buff), srcfp) != NULL) {
         sscanf(buff, "%s", buff);
 
-        // ignore comments,spaces
-        if (*buff == '/' || is_space(buff))
+        if (tokenize(buff, token, &tok_type, NULL, pass1) < 0)
             continue;
-
-        init_tokenizing(buff, token, &tok_type, NULL, pass1);
 
         switch (tok_type) {
             case LABEL:
@@ -96,7 +93,7 @@ void init_synthesis(char *file_name, struct Symbol **sym_tbl) {
 
         sscanf(buff, "%s", buff);
 
-        init_tokenizing(buff, token, &tok_type, &c_inst, pass2);
+        tokenize(buff, token, &tok_type, &c_inst, pass2);
 
         switch (tok_type) {
             case A_INS:

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include "tokenizer.h"
+#include "lexer.h"
 #include "utils.h"
 
 /* Tokens regex */
@@ -32,8 +32,12 @@ static int is_CIns(const char *str) {
     return check_match(str, comp_dest_token) || check_match(str, comp_jmp_token);
 }
 
-void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int state) {
+int tokenize(const char *buf, char *token, int *tok_type, C *c_inst, int state) {
     char *inst[2];
+
+    // ignore comments,spaces
+    if (*buf == '/' || is_space(buf))
+        return -1;
 
     if (is_CIns(buf) && state == pass2) {
         if (check_match(buf, comp_dest_token)) {
@@ -70,6 +74,7 @@ void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int
 
 
         strcpy(token, inst[0]);
+        return 0;
     }
 }
 

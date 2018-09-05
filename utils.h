@@ -11,10 +11,11 @@ enum error_severity {
     Info
 };
 
-void hasm_error(const char *fmt,int severity, ...);
-void *hasm_malloc(size_t size);
-int hasm_fclose(FILE *fp);
-FILE* hasm_fopen(const char *fname, const char *modes);
-size_t hasm_fwrite(const void *ptr, size_t size, size_t count, FILE *fp);
+void hasm_error(const char *,int, ...);
+void *hasm_malloc(size_t);
+int hasm_fclose(FILE *);
+FILE* hasm_fopen(const char *, const char *);
+size_t hasm_fwrite(const void *, size_t, size_t, FILE *);
+int fd_isreg(const char *);
 
 #endif //HASM_HASMLIB_H

@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <sys/stat.h>
 #include "utils.h"
 
 
@@ -25,9 +26,9 @@ void *hasm_malloc(size_t size) {
 }
 
 
-FILE *hasm_fopen(const char *fname, const char *modes) {
+FILE *hasm_fopen(const char *filename, const char *modes) {
     FILE *f;
-    f = fopen(fname, modes);
+    f = fopen(filename, modes);
     (!f) ? hasm_error("unable to open file", Error) : NULL;
     return f;
 }
@@ -48,4 +49,13 @@ int hasm_fclose(FILE *fp) {
     }
     return 0;
 
+}
+
+int fd_isreg(const char *filename) {
+    struct stat st;
+
+    if (stat(filename, &st))
+        return -1;
+
+    return S_ISREG(st.st_mode);
 }

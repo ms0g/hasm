@@ -32,6 +32,6 @@ int is_space(const char *str);
 static int check_match(const char *str, const char *rgx);
 
 /* Initialize tokenizing */
-void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int state);
+int tokenize(const char *buf, char *token, int *tok_type, C *c_inst, int state);
 
 #endif //HASM_TOKENIZER_H
