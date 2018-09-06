@@ -22,13 +22,12 @@ static uint16_t RAM_ADDR = 0x0010;
 /* pass 1 */
 void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
     char buff[BUFF], token[100];
-    FILE *int_file;
     struct Symbol *sym;
     int tok_type;
 
     memset(token, 0, 100);
-    
-    int_file = hasm_fopen(file_name, "w");
+
+    intfp = hasm_fopen(file_name, "w");
 
     while (fgets(buff, sizeof(buff), srcfp) != NULL) {
         sscanf(buff, "%s", buff);
@@ -53,12 +52,12 @@ void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
         memset(token, 0, 100);
 
         if (tok_type != LABEL) {
-            fprintf(int_file, "%s\n", buff);
+            fprintf(intfp, "%s\n", buff);
             // increase ROM address
             ++LC;
         }
     }
-    hasm_fclose(int_file);
+    hasm_fclose(intfp);
 }
 
 /* pass 2 */
