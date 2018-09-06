@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symtab.h"
-#include "lib/hasmlib.h"
+#include "utils.h"
 
 const struct Symbol predef_operands[] = {
         {"R0",     0x0000},
@@ -77,6 +77,5 @@ void cleanup_symtab(struct Symbol **sym_table) {
     if (*sym_table == NULL) return;
     cleanup_symtab(&(*sym_table)->right);
     cleanup_symtab(&(*sym_table)->left);
-    free(*sym_table);
-    *sym_table = NULL;
+    free((void *)*sym_table);
 }

@@ -3,7 +3,7 @@
 #include "hdr.h"
 
 
-void write_hdr(FILE *ofp) {
+void write_hdr(FILE *fp) {
     Hex_hdr hdr;
     hdr.h_MAG0 = MAG0;
     hdr.h_MAG1 = MAG1;
@@ -12,5 +12,5 @@ void write_hdr(FILE *ofp) {
     hdr.h_end = END;
     hdr.p_off = P_OFF;
 
-    hasm_fwrite(&hdr, sizeof(Hex_hdr), 1, ofp);
+    hasm_fwrite(&hdr, sizeof(Hex_hdr), 1, fp);
 }

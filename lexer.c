@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include "tokenizer.h"
-#include "lib/hasmlib.h"
+#include "lexer.h"
+#include "utils.h"
 
 /* Tokens regex */
 static const char *at_token = "^@[[:alnum:]]";
@@ -15,25 +15,21 @@ static const char *comp_dest_token = "^[[:upper:]]=[[:alnum:]]";
 static const char *comp_jmp_token = "^[[:alnum:]];[[:upper:]]";
 static const char *space = "^[[:space:]]";
 
+/* Check tokens */
+static int is_label(const char *);
+static int is_AIns(const char *);
+static int is_CIns(const char *);
+static int is_space(const char *);
+static int check_match(const char *, const char *);
 
-int is_space(const char *str) {
-    return check_match(str, space);
-}
 
-static int is_label(const char *str) {
-    return check_match(str, label_token);
-}
 
-static int is_AIns(const char *str) {
-    return check_match(str, at_token);
-}
-
-static int is_CIns(const char *str) {
-    return check_match(str, comp_dest_token) || check_match(str, comp_jmp_token);
-}
-
-void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int state) {
+int tokenize(char *buf, char *token, int *tok_type, C_ins_t *c_inst, int state) {
     char *inst[2];
+
+    // ignore comments,spaces
+    if (*buf == '/' || is_space(buf))
+        return -1;
 
     if (is_CIns(buf) && state == pass2) {
         if (check_match(buf, comp_dest_token)) {
@@ -70,6 +66,7 @@ void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int
 
 
         strcpy(token, inst[0]);
+        return 0;
     }
 }
 
@@ -77,7 +74,6 @@ void init_tokenizing(const char *buf, char *token, int *tok_type, C *c_inst, int
 static int check_match(const char *str, const char *rgx) {
     regex_t regex;
     int rets;
-    char msgbuf[100];
 
     if (regcomp(&regex, rgx, 0)) {
         hasm_error("Could not compile regex\n", Error);
@@ -88,16 +84,21 @@ static int check_match(const char *str, const char *rgx) {
     // Free memory allocated to the pattern buffer by regcomp()
     regfree(&regex);
 
-    switch (rets) {
-        case 0:
-            return 1;
-        case REG_NOMATCH:
-            hasm_error("No match", Warning);
-            break;
-        default:
-            regerror(rets, &regex, msgbuf, sizeof(msgbuf));
-            hasm_error("Regex match failed: %s\n", Error, msgbuf);
-            break;
-    }
-    return 0;
+    return rets == 0;
+}
+
+static int is_space(const char *str) {
+    return check_match(str, space);
+}
+
+static int is_label(const char *str) {
+    return check_match(str, label_token);
+}
+
+static int is_AIns(const char *str) {
+    return check_match(str, at_token);
+}
+
+static int is_CIns(const char *str) {
+    return check_match(str, comp_dest_token) || check_match(str, comp_jmp_token);
 }

@@ -1,7 +1,8 @@
 #include <stdint.h>
 #include <string.h>
 #include "optab.h"
-#include "lib/hopcodes.h"
+#include "utils.h"
+#include "hopcodes.h"
 
 uint16_t scan_opc(const char *opcode, const enum op_type type) {
     if (strcmp(opcode, "0") == 0)
