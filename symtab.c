@@ -77,6 +77,5 @@ void cleanup_symtab(struct Symbol **sym_table) {
     if (*sym_table == NULL) return;
     cleanup_symtab(&(*sym_table)->right);
     cleanup_symtab(&(*sym_table)->left);
-    free(*sym_table);
-    *sym_table = NULL;
+    free((void *)*sym_table);
 }

@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
     // pass 2
     init_synthesis(file_name, &sym_tbl);
 
-    free(file_name);
+    free((void *)file_name);
     cleanup();
 
     return 0;
