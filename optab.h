@@ -8,6 +8,6 @@ enum op_type {
 };
 
 /* Scan opcodes */
-uint16_t scan_opc(const char *opcode, const enum op_type type);
+uint16_t scan_opc(const char *, const enum op_type);
 
 #endif //HASM_OPTAB_H

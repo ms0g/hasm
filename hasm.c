@@ -5,7 +5,14 @@
 #include <getopt.h>
 #include "parser.h"
 #include "utils.h"
+#include "hdr.h"
 
+#define ADD_SUFFIX(fname, suf) (strcat(fname, suf))
+
+#define OUTFN(fname)            \
+char *t = strchr(fname, '.');   \
+*t = '\0';                      \
+ADD_SUFFIX(fname, ".hex");
 
 FILE *srcfp = NULL;
 
@@ -41,12 +48,23 @@ int main(int argc, char *argv[]) {
     // initializing symbol table
     init_symtab(&sym_tbl);
 
+    // create intermediate file
+    ADD_SUFFIX(argv[optind], ".int");
+
     // pass 1
     init_analysis(srcfp, argv[optind], &sym_tbl);
 
-    // pass 2
-    init_synthesis(argv[optind], &sym_tbl);
+    char *file_name = strdup(argv[optind]);
 
+    OUTFN(argv[optind])
+    // output file
+    outfp = hasm_fopen(argv[optind], "wb");
+    write_hdr(outfp);
+
+    // pass 2
+    init_synthesis(file_name, &sym_tbl);
+
+    free(file_name);
     cleanup();
 
     return 0;

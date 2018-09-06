@@ -14,15 +14,15 @@ struct Symbol {
 
 
 /* Insert new symbol to tree */
-void insert_symtab(struct Symbol **node, const char *symbol, unsigned short addr);
+void insert_symtab(struct Symbol **, const char *, unsigned short);
 
 /* Search symbols */
-struct Symbol *scan_symtab(struct Symbol *root, const char *symbol);
+struct Symbol *scan_symtab(struct Symbol *, const char *);
 
 /* Initialize the tree via predefined operands */
-void init_symtab(struct Symbol **sym_table);
+void init_symtab(struct Symbol **);
 
 /* Cleanup tree recursively */
-void cleanup_symtab(struct Symbol **sym_table);
+void cleanup_symtab(struct Symbol **);
 
 #endif //HASM_SYMBOL_TABLE_H

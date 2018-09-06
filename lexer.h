@@ -22,16 +22,9 @@ typedef struct {
     char *dest;
     char *jmp;
 
-} C;
+} C_ins_t;
 
-/* Check tokens */
-static int is_label(const char *str);
-static int is_AIns(const char *str);
-static int is_CIns(const char *str);
-int is_space(const char *str);
-static int check_match(const char *str, const char *rgx);
 
-/* Initialize tokenizing */
-int tokenize(const char *buf, char *token, int *tok_type, C *c_inst, int state);
+int tokenize(char *, char *, int *, C_ins_t *, int);
 
 #endif //HASM_TOKENIZER_H

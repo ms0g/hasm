@@ -15,24 +15,16 @@ static const char *comp_dest_token = "^[[:upper:]]=[[:alnum:]]";
 static const char *comp_jmp_token = "^[[:alnum:]];[[:upper:]]";
 static const char *space = "^[[:space:]]";
 
+/* Check tokens */
+static int is_label(const char *);
+static int is_AIns(const char *);
+static int is_CIns(const char *);
+static int is_space(const char *);
+static int check_match(const char *, const char *);
 
-int is_space(const char *str) {
-    return check_match(str, space);
-}
 
-static int is_label(const char *str) {
-    return check_match(str, label_token);
-}
 
-static int is_AIns(const char *str) {
-    return check_match(str, at_token);
-}
-
-static int is_CIns(const char *str) {
-    return check_match(str, comp_dest_token) || check_match(str, comp_jmp_token);
-}
-
-int tokenize(const char *buf, char *token, int *tok_type, C *c_inst, int state) {
+int tokenize(char *buf, char *token, int *tok_type, C_ins_t *c_inst, int state) {
     char *inst[2];
 
     // ignore comments,spaces
@@ -93,4 +85,20 @@ static int check_match(const char *str, const char *rgx) {
     regfree(&regex);
 
     return rets == 0;
+}
+
+static int is_space(const char *str) {
+    return check_match(str, space);
+}
+
+static int is_label(const char *str) {
+    return check_match(str, label_token);
+}
+
+static int is_AIns(const char *str) {
+    return check_match(str, at_token);
+}
+
+static int is_CIns(const char *str) {
+    return check_match(str, comp_dest_token) || check_match(str, comp_jmp_token);
 }

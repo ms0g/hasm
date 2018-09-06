@@ -9,15 +9,6 @@
 
 #define BUFF 1080
 
-
-#define ADD_SUFFIX(fname, suf) (strcat(fname, suf))
-
-#define OUTFN(fname)            \
-char *t = strchr(fname, '.');   \
-*t = '\0';                      \
-ADD_SUFFIX(fname, ".hex");
-
-
 /* buffer to keep binary field */
 static uint16_t byte_buff;
 
@@ -36,9 +27,7 @@ void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
     int tok_type;
 
     memset(token, 0, 100);
-
-    // create intermediate file
-    ADD_SUFFIX(file_name, ".int");
+    
     int_file = hasm_fopen(file_name, "w");
 
     while (fgets(buff, sizeof(buff), srcfp) != NULL) {
@@ -82,18 +71,12 @@ void init_synthesis(char *file_name, struct Symbol **sym_tbl) {
     // int file
     intfp = hasm_fopen(file_name, "r");
 
-    OUTFN(file_name)
-    // output file
-    outfp = hasm_fopen(file_name, "wb");
-
-    write_hdr(outfp);
-
     while (fgets(buff, sizeof(buff), intfp) != NULL) {
-        C c_inst = {.comp="", .dest="", .jmp=""};
+        C_ins_t _inst = {.comp="", .dest="", .jmp=""};
 
         sscanf(buff, "%s", buff);
 
-        tokenize(buff, token, &tok_type, &c_inst, pass2);
+        tokenize(buff, token, &tok_type, &_inst, pass2);
 
         switch (tok_type) {
             case A_INS:
@@ -101,9 +84,9 @@ void init_synthesis(char *file_name, struct Symbol **sym_tbl) {
                 byte_buff |= (sym) ? sym->addr : 0;
                 break;
             case C_INS:
-                dest = scan_opc(c_inst.dest, hasm_dest);
-                comp = scan_opc(c_inst.comp, hasm_comp);
-                jmp = scan_opc(c_inst.jmp, hasm_jmp);
+                dest = scan_opc(_inst.dest, hasm_dest);
+                comp = scan_opc(_inst.comp, hasm_comp);
+                jmp = scan_opc(_inst.jmp, hasm_jmp);
 
                 byte_buff |= (dest && comp) ? (dest << 3 | comp << 6) :
                              (comp << 6 | jmp);

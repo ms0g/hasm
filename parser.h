@@ -9,9 +9,9 @@
 FILE *intfp, *outfp;
 
 /* extract operands, create intermediate file,update symbol table */
-void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl);
+void init_analysis(FILE *, char *, struct Symbol **);
 
 /* process intermediate file via symbol table */
-void init_synthesis(char *file_name, struct Symbol **sym_tbl);
+void init_synthesis(char *, struct Symbol **);
 
 #endif //HASM_PARSER_H
