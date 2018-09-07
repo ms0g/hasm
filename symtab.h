@@ -1,5 +1,5 @@
-#ifndef HASM_SYMBOL_TABLE_H
-#define HASM_SYMBOL_TABLE_H
+#ifndef HASM_SYMTAB_H
+#define HASM_SYMTAB_H
 
 #include <stdint.h>
 
@@ -25,4 +25,4 @@ void init_symtab(struct Symbol **);
 /* Cleanup tree recursively */
 void cleanup_symtab(struct Symbol **);
 
-#endif //HASM_SYMBOL_TABLE_H
+#endif //HASM_SYMTAB_H

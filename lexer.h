@@ -1,5 +1,5 @@
-#ifndef HASM_TOKENIZER_H
-#define HASM_TOKENIZER_H
+#ifndef HASM_LEXER_H
+#define HASM_LEXER_H
 
 #include <stdint.h>
 
@@ -27,4 +27,4 @@ typedef struct {
 
 int tokenize(char *, char *, int *, C_ins_t *, int);
 
-#endif //HASM_TOKENIZER_H
+#endif //HASM_LEXER_H
