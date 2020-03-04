@@ -55,19 +55,23 @@ int tokenize(char *buf, char *token, int *tok_type, C_ins_t *c_inst, int state) 
         // split with @
         inst[0] = strtok(buf, "@");
 
-        if (check_match(buf, at_num_token))
-            *tok_type = (state == pass2) ? NUMBER : -1;
+        if (check_match(buf, at_num_token)) {
+            if (state == pass2)
+                *tok_type = NUMBER;
+        }
+            
         else if (check_match(buf, at_var_token))
             // if it's var(@i)
             *tok_type = A_INS;
-        else
+        else {
             // if it's label(@LOOP) operand
-            *tok_type = (state == pass2) ? A_INS : -1;
-
-
+            if (state == pass2)
+                *tok_type = A_INS;
+        }
+            
         strcpy(token, inst[0]);
-        return 0;
     }
+    return 0;
 }
 
 

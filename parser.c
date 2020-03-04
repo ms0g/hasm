@@ -41,7 +41,9 @@ void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
                 break;
             case A_INS:
                 sym = scan_symtab(*sym_tbl, token);
-                (!sym) ? insert_symtab(sym_tbl, token, RAM_ADDR++) : NULL;
+                if (!sym) {
+                    insert_symtab(sym_tbl, token, RAM_ADDR++);
+                }
                 break;
             case C_INS:
             default:
@@ -80,15 +82,18 @@ void init_synthesis(char *file_name, struct Symbol **sym_tbl) {
         switch (tok_type) {
             case A_INS:
                 sym = scan_symtab(*sym_tbl, token);
-                byte_buff |= (sym) ? sym->addr : 0;
+                if (sym) {
+                    byte_buff |= sym->addr;
+                }
                 break;
             case C_INS:
                 dest = scan_opc(_inst.dest, hasm_dest);
                 comp = scan_opc(_inst.comp, hasm_comp);
                 jmp = scan_opc(_inst.jmp, hasm_jmp);
-
-                byte_buff |= (dest && comp) ? (dest << 3 | comp << 6) :
-                             (comp << 6 | jmp);
+                if (dest && comp) {
+                    byte_buff |= dest << 3 | comp << 6;
+                } else
+                    byte_buff |= comp << 6 | jmp;
                 break;
             case NUMBER:
                 byte_buff |= (uint16_t) atoi(token);
