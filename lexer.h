@@ -18,13 +18,13 @@ enum state {
 
 /* C ins fields */
 typedef struct {
-    char *comp;
-    char *dest;
-    char *jmp;
+    char comp[2];
+    char dest[2];
+    char jmp[2];
 
-} C_ins_t;
+} C_INS_t;
 
 
-int tokenize(char *, char *, int *, C_ins_t *, int);
+int tokenize(char *buf, char *token, int *tok_type, C_INS_t *c_inst, int state);
 
 #endif //HASM_LEXER_H

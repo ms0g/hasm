@@ -16,15 +16,15 @@ static const char *comp_jmp_token = "^[[:alnum:]];[[:upper:]]";
 static const char *space = "^[[:space:]]";
 
 /* Check tokens */
-static int is_label(const char *);
-static int is_AIns(const char *);
-static int is_CIns(const char *);
-static int is_space(const char *);
-static int check_match(const char *, const char *);
+static int is_label(const char *str);
+static int is_AIns(const char *str);
+static int is_CIns(const char *str);
+static int is_space(const char *str);
+static int check_match(const char *str, const char *rgx);
 
 
 
-int tokenize(char *buf, char *token, int *tok_type, C_ins_t *c_inst, int state) {
+int tokenize(char *buf, char *token, int *tok_type, C_INS_t *c_inst, int state) {
     char *inst[2];
 
     // ignore comments,spaces
@@ -35,13 +35,13 @@ int tokenize(char *buf, char *token, int *tok_type, C_ins_t *c_inst, int state) 
         if (check_match(buf, comp_dest_token)) {
             inst[0] = strtok(buf, "=");
             inst[1] = strtok(NULL, "=");
-            c_inst->dest = inst[0];
-            c_inst->comp = inst[1];
+            strncpy(c_inst->dest, inst[0], 1);
+            strncpy(c_inst->comp, inst[1], 1);
         } else {
             inst[0] = strtok(buf, ";");
             inst[1] = strtok(NULL, ";");
-            c_inst->comp = inst[0];
-            c_inst->jmp = inst[1];
+            strncpy(c_inst->comp, inst[0], 1);
+            strncpy(c_inst->jmp, inst[1], 1);
         }
 
         *tok_type = C_INS;

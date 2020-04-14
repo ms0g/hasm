@@ -2,6 +2,9 @@
 #define HASM_UTILS_H
 #include <stdio.h>
 
+typedef uint8_t u8;
+typedef uint16_t u16;
+
 #define read_msb(_val_) (((_val_) << 8)|((_val_) >> 8)) /* read byte MSB */
 
 enum error_severity {
@@ -11,11 +14,11 @@ enum error_severity {
     Info
 };
 
-void hasm_error(const char *,int, ...);
-void *hasm_malloc(size_t);
-int hasm_fclose(FILE *);
-FILE* hasm_fopen(const char *, const char *);
-size_t hasm_fwrite(const void *, size_t, size_t, FILE *);
-int fd_isreg(const char *);
+void hasm_error(const char *fmt,int severity, ...);
+void *hasm_malloc(size_t size);
+int hasm_fclose(FILE *fp);
+FILE* hasm_fopen(const char *filename, const char *modes);
+size_t hasm_fwrite(const void *ptr, size_t size, size_t count, FILE *fp);
+int fd_isreg(const char *filename);
 
 #endif //HASM_UTILS_H

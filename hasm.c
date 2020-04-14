@@ -7,17 +7,18 @@
 #include "utils.h"
 #include "hdr.h"
 
-#define ADD_SUFFIX(fname, suf) (strcat(fname, suf))
-
-#define OUTFN(fname)            \
-char *t = strchr(fname, '.');   \
-*t = '\0';                      \
-ADD_SUFFIX(fname, ".hex");
-
-FILE *srcfp = NULL;
+#define ADD_SUFFIX(fname, suf)   \
+char *t = strrchr(fname, '.');   \
+*t = '\0';                       \
+strcat(fname, suf);
 
 /* Symbol table */
 struct Symbol *sym_tbl = NULL;
+
+/* Int,out file */
+FILE *infp;
+FILE *outfp;
+
 
 static void cleanup();
 
@@ -40,7 +41,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (fd_isreg(argv[optind]) > 0) {
-        srcfp = hasm_fopen(argv[optind], "r");
+        infp = hasm_fopen(argv[optind], "r");
     } else {
         hasm_error("error: %s: No such file or directory\n", Fatal, argv[optind]);
     }
@@ -49,22 +50,26 @@ int main(int argc, char *argv[]) {
     init_symtab(&sym_tbl);
 
     // create intermediate file
-    ADD_SUFFIX(argv[optind], ".int");
+    char *intfile = argv[optind];
+    {
+        ADD_SUFFIX(intfile, ".int");
+        
+    }
 
     // pass 1
-    init_analysis(srcfp, argv[optind], &sym_tbl);
+    init_analysis(infp, intfile, &sym_tbl);
+    
+    fclose(infp);
+    infp = hasm_fopen(intfile, "r");
 
-    char *file_name = strdup(argv[optind]);
-
-    OUTFN(argv[optind])
+    ADD_SUFFIX(intfile, ".hex")
     // output file
-    outfp = hasm_fopen(argv[optind], "wb");
+    outfp = hasm_fopen(intfile, "wb");
     write_hdr(outfp);
 
     // pass 2
-    init_synthesis(file_name, &sym_tbl);
+    init_synthesis(infp, outfp, &sym_tbl);
 
-    free((void *)file_name);
     cleanup();
 
     return 0;
@@ -72,7 +77,6 @@ int main(int argc, char *argv[]) {
 
 static void cleanup() {
     cleanup_symtab(&sym_tbl);
-    hasm_fclose(srcfp);
-    hasm_fclose(intfp);
     hasm_fclose(outfp);
+    hasm_fclose(infp);
 }

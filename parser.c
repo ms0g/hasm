@@ -10,26 +10,27 @@
 #define BUFF 1080
 
 /* buffer to keep binary field */
-static uint16_t byte_buff;
+static u16 byte_buff;
 
 /* address counter for label operands */
-static uint16_t LC;
+static u16 LC;
 
 /* RAM[16] */
-static uint16_t RAM_ADDR = 0x0010;
+static u16 RAM_ADDR = 0x0010;
 
 
 /* pass 1 */
-void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
+void init_analysis(FILE *infp, char *file_name, struct Symbol **sym_table) {
     char buff[BUFF], token[100];
     struct Symbol *sym;
+    FILE *outfp;
     int tok_type;
 
     memset(token, 0, 100);
 
-    intfp = hasm_fopen(file_name, "w");
+    outfp = hasm_fopen(file_name, "w");
 
-    while (fgets(buff, sizeof(buff), srcfp) != NULL) {
+    while (fgets(buff, sizeof(buff), infp) != NULL) {
         sscanf(buff, "%s", buff);
 
         if (tokenize(buff, token, &tok_type, NULL, pass1) < 0)
@@ -37,12 +38,12 @@ void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
 
         switch (tok_type) {
             case LABEL:
-                insert_symtab(sym_tbl, token, LC);
+                insert_symtab(sym_table, token, LC);
                 break;
             case A_INS:
-                sym = scan_symtab(*sym_tbl, token);
+                sym = scan_symtab(*sym_table, token);
                 if (!sym) {
-                    insert_symtab(sym_tbl, token, RAM_ADDR++);
+                    insert_symtab(sym_table, token, RAM_ADDR++);
                 }
                 break;
             case C_INS:
@@ -54,26 +55,23 @@ void init_analysis(FILE *srcfp, char *file_name, struct Symbol **sym_tbl) {
         memset(token, 0, 100);
 
         if (tok_type != LABEL) {
-            fprintf(intfp, "%s\n", buff);
+            fprintf(outfp, "%s\n", buff);
             // increase ROM address
             ++LC;
         }
     }
-    hasm_fclose(intfp);
+    hasm_fclose(outfp);
 }
 
 /* pass 2 */
-void init_synthesis(char *file_name, struct Symbol **sym_tbl) {
+void init_synthesis(FILE *infp, FILE *outfp, struct Symbol **sym_table) {
     char buff[BUFF], token[100];
     unsigned short dest, comp, jmp;
     struct Symbol *sym;
     int tok_type;
 
-    // int file
-    intfp = hasm_fopen(file_name, "r");
-
-    while (fgets(buff, sizeof(buff), intfp) != NULL) {
-        C_ins_t _inst = {.comp="", .dest="", .jmp=""};
+    while (fgets(buff, sizeof(buff), infp) != NULL) {
+        C_INS_t _inst = {.comp="", .dest="", .jmp=""};
 
         sscanf(buff, "%s", buff);
 
@@ -81,7 +79,7 @@ void init_synthesis(char *file_name, struct Symbol **sym_tbl) {
 
         switch (tok_type) {
             case A_INS:
-                sym = scan_symtab(*sym_tbl, token);
+                sym = scan_symtab(*sym_table, token);
                 if (sym) {
                     byte_buff |= sym->addr;
                 }
@@ -96,7 +94,7 @@ void init_synthesis(char *file_name, struct Symbol **sym_tbl) {
                     byte_buff |= comp << 6 | jmp;
                 break;
             case NUMBER:
-                byte_buff |= (uint16_t) atoi(token);
+                byte_buff |= (u16) atoi(token);
                 break;
             default:
                 break;

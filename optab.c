@@ -1,10 +1,9 @@
 #include <stdint.h>
 #include <string.h>
 #include "optab.h"
-#include "utils.h"
 #include "hopcodes.h"
 
-uint16_t scan_opc(const char *opcode, const enum op_type type) {
+u16 scan_opc(const char *opcode, const enum op_type type) {
     if (strcmp(opcode, "0") == 0)
         return COMP_ZERO;
     else if (strcmp(opcode, "1") == 0)
@@ -105,6 +104,5 @@ uint16_t scan_opc(const char *opcode, const enum op_type type) {
         return JLE;
     else if (strcmp(opcode, "JMP") == 0)
         return JMP;
-    else
-        return 0;
+return 0;
 }

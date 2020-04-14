@@ -6,10 +6,10 @@
 
 /* hack exec file header */
 typedef struct {
-    uint8_t h_MAG0;
-    uint8_t h_MAG1;
-    uint8_t h_MAG2;
-    uint8_t h_MAG3;
+    u8 h_MAG0;
+    u8 h_MAG1;
+    u8 h_MAG2;
+    u8 h_MAG3;
     unsigned short h_end;
     unsigned short p_off;
 
@@ -23,6 +23,6 @@ typedef struct {
 #define P_OFF read_msb(0x08) /* Program offset */
 
 /* Write header */
-void write_hdr(FILE *);
+void write_hdr(FILE *fp);
 
 #endif //HASM_HDR_H

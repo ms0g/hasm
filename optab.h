@@ -1,5 +1,6 @@
 #ifndef HASM_OPTAB_H
 #define HASM_OPTAB_H
+#include "utils.h"
 
 enum op_type {
     hasm_comp,
@@ -8,6 +9,6 @@ enum op_type {
 };
 
 /* Scan opcodes */
-uint16_t scan_opc(const char *, const enum op_type);
+u16 scan_opc(const char *opcode, const enum op_type type);
 
 #endif //HASM_OPTAB_H
