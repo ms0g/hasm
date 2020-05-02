@@ -3,14 +3,18 @@
 #include "optab.h"
 #include "hopcodes.h"
 
+
 u16 scan_opc(const char *opcode, const enum op_type type) {
-    if (strcmp(opcode, "0") == 0)
+    if (opcode == NULL) {
+        return 0;
+    }
+    if (STR_CMP(opcode, "0", 1))
         return COMP_ZERO;
-    else if (strcmp(opcode, "1") == 0)
+    else if (STR_CMP(opcode, "1", 1))
         return COMP_ONE;
-    else if (strcmp(opcode, "-1") == 0)
+    else if (STR_CMP(opcode, "-1", 1))
         return COMP_MINUS_1;
-    else if (strcmp(opcode, "D") == 0) {
+    else if (STR_CMP(opcode, "D", 1)) {
         switch (type) {
             case hasm_comp:
                 return COMP_D;
@@ -19,7 +23,7 @@ u16 scan_opc(const char *opcode, const enum op_type type) {
             default:
                 break;
         }
-    } else if (strcmp(opcode, "A") == 0) {
+    } else if (STR_CMP(opcode, "A", 1)) {
         switch (type) {
             case hasm_comp:
                 return COMP_A;
@@ -28,33 +32,33 @@ u16 scan_opc(const char *opcode, const enum op_type type) {
             default:
                 break;
         }
-    } else if (strcmp(opcode, "!D") == 0)
+    } else if (STR_CMP(opcode, "!D", 2))
         return COMP_NOT_D;
-    else if (strcmp(opcode, "!A") == 0)
+    else if (STR_CMP(opcode, "!A", 2))
         return COMP_NOT_A;
-    else if (strcmp(opcode, "-D") == 0)
+    else if (STR_CMP(opcode, "-D", 2))
         return COMP_MINUS_D;
-    else if (strcmp(opcode, "-A") == 0)
+    else if (STR_CMP(opcode, "-A", 2))
         return COMP_MINUS_A;
-    else if (strcmp(opcode, "D+1") == 0)
+    else if (STR_CMP(opcode, "D+1", 3))
         return COMP_D_PLUS_1;
-    else if (strcmp(opcode, "A+1") == 0)
+    else if (STR_CMP(opcode, "A+1", 3))
         return COMP_A_PLUS_1;
-    else if (strcmp(opcode, "D-1") == 0)
+    else if (STR_CMP(opcode, "D-1", 3))
         return COMP_D_MINUS_1;
-    else if (strcmp(opcode, "A-1") == 0)
+    else if (STR_CMP(opcode, "A-1", 3))
         return COMP_A_MINUS_1;
-    else if (strcmp(opcode, "D+A") == 0)
+    else if (STR_CMP(opcode, "D+A", 3))
         return COMP_D_PLUS_A;
-    else if (strcmp(opcode, "D-A") == 0)
+    else if (STR_CMP(opcode, "D-A", 3))
         return COMP_D_MINUS_A;
-    else if (strcmp(opcode, "A-D") == 0)
+    else if (STR_CMP(opcode, "A-D", 3))
         return COMP_A_MINUS_D;
-    else if (strcmp(opcode, "D&A") == 0)
+    else if (STR_CMP(opcode, "D&A", 3))
         return COMP_D_AND_A;
-    else if (strcmp(opcode, "D|A") == 0)
+    else if (STR_CMP(opcode, "D|A", 3))
         return COMP_D_OR_A;
-    else if (strcmp(opcode, "M") == 0) {
+    else if (STR_CMP(opcode, "M", 1)) {
         switch (type) {
             case hasm_comp:
                 return COMP_M;
@@ -64,45 +68,45 @@ u16 scan_opc(const char *opcode, const enum op_type type) {
                 break;
         }
 
-    } else if (strcmp(opcode, "!M") == 0)
+    } else if (STR_CMP(opcode, "!M", 2))
         return COMP_NOT_M;
-    else if (strcmp(opcode, "-M") == 0)
+    else if (STR_CMP(opcode, "-M", 2))
         return COMP_MINUS_M;
-    else if (strcmp(opcode, "M+1") == 0)
+    else if (STR_CMP(opcode, "M+1", 3))
         return COMP_M_PLUS_1;
-    else if (strcmp(opcode, "M-1") == 0)
+    else if (STR_CMP(opcode, "M-1", 3))
         return COMP_M_MINUS_1;
-    else if (strcmp(opcode, "D+M") == 0)
+    else if (STR_CMP(opcode, "D+M", 3))
         return COMP_D_PLUS_M;
-    else if (strcmp(opcode, "D-M") == 0)
+    else if (STR_CMP(opcode, "D-M", 3))
         return COMP_D_MINUS_M;
-    else if (strcmp(opcode, "M-D") == 0)
+    else if (STR_CMP(opcode, "M-D", 3))
         return COMP_M_MINUS_D;
-    else if (strcmp(opcode, "D&M") == 0)
+    else if (STR_CMP(opcode, "D&M", 3))
         return COMP_D_AND_M;
-    else if (strcmp(opcode, "D|M") == 0)
+    else if (STR_CMP(opcode, "D|M", 3))
         return COMP_D_OR_M;
-    else if (strcmp(opcode, "MD") == 0)
+    else if (STR_CMP(opcode, "MD", 2))
         return DEST_MD;
-    else if (strcmp(opcode, "AM") == 0)
+    else if (STR_CMP(opcode, "AM", 2))
         return DEST_AM;
-    else if (strcmp(opcode, "AD") == 0)
+    else if (STR_CMP(opcode, "AD", 2))
         return DEST_AD;
-    else if (strcmp(opcode, "AMD") == 0)
+    else if (STR_CMP(opcode, "AMD", 3))
         return DEST_AMD;
-    else if (strcmp(opcode, "JGT") == 0)
+    else if (STR_CMP(opcode, "JGT", 3))
         return JGT;
-    else if (strcmp(opcode, "JEQ") == 0)
+    else if (STR_CMP(opcode, "JEQ", 3))
         return JEQ;
-    else if (strcmp(opcode, "JGE") == 0)
+    else if (STR_CMP(opcode, "JGE", 3))
         return JGE;
-    else if (strcmp(opcode, "JLT") == 0)
+    else if (STR_CMP(opcode, "JLT", 3))
         return JLT;
-    else if (strcmp(opcode, "JNE") == 0)
+    else if (STR_CMP(opcode, "JNE", 3))
         return JNE;
-    else if (strcmp(opcode, "JLE") == 0)
+    else if (STR_CMP(opcode, "JLE", 3))
         return JLE;
-    else if (strcmp(opcode, "JMP") == 0)
+    else if (STR_CMP(opcode, "JMP", 3))
         return JMP;
 return 0;
 }

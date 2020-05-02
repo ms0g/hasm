@@ -18,9 +18,9 @@ enum state {
 
 /* C ins fields */
 typedef struct {
-    char comp[2];
-    char dest[2];
-    char jmp[2];
+    char *comp;
+    char *dest;
+    char *jmp;
 
 } C_INS_t;
 

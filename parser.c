@@ -71,7 +71,7 @@ void init_synthesis(FILE *infp, FILE *outfp, struct Symbol **sym_table) {
     int tok_type;
 
     while (fgets(buff, sizeof(buff), infp) != NULL) {
-        C_INS_t _inst = {.comp="", .dest="", .jmp=""};
+        C_INS_t _inst;
 
         sscanf(buff, "%s", buff);
 
@@ -105,5 +105,10 @@ void init_synthesis(FILE *infp, FILE *outfp, struct Symbol **sym_table) {
         hasm_fwrite(&byte_buff, sizeof(byte_buff), 1, outfp);
         // reset buff
         byte_buff &= ~byte_buff;
+        
+        
+        Hasm_Free(_inst.comp)
+        Hasm_Free(_inst.dest)
+        Hasm_Free(_inst.jmp)
     }
 }

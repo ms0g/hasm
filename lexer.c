@@ -25,7 +25,7 @@ static int check_match(const char *str, const char *rgx);
 
 
 int tokenize(char *buf, char *token, int *tok_type, C_INS_t *c_inst, int state) {
-    char *inst[2];
+    char *inst;
 
     // ignore comments,spaces
     if (*buf == '/' || is_space(buf))
@@ -33,15 +33,15 @@ int tokenize(char *buf, char *token, int *tok_type, C_INS_t *c_inst, int state) 
 
     if (is_CIns(buf) && state == pass2) {
         if (check_match(buf, comp_dest_token)) {
-            inst[0] = strtok(buf, "=");
-            inst[1] = strtok(NULL, "=");
-            strncpy(c_inst->dest, inst[0], 1);
-            strncpy(c_inst->comp, inst[1], 1);
+            inst = strtok(buf, "=");
+            c_inst->dest = strdup(inst);
+            inst = strtok(NULL, "=");
+            c_inst->comp = strdup(inst);
         } else {
-            inst[0] = strtok(buf, ";");
-            inst[1] = strtok(NULL, ";");
-            strncpy(c_inst->comp, inst[0], 1);
-            strncpy(c_inst->jmp, inst[1], 1);
+            inst = strtok(buf, ";");
+            c_inst->comp = strdup(inst);
+            inst = strtok(NULL, ";");
+            c_inst->jmp = strdup(inst);
         }
 
         *tok_type = C_INS;
@@ -53,7 +53,7 @@ int tokenize(char *buf, char *token, int *tok_type, C_INS_t *c_inst, int state) 
         *tok_type = LABEL;
     } else if (is_AIns(buf)) {
         // split with @
-        inst[0] = strtok(buf, "@");
+        inst = strtok(buf, "@");
 
         if (check_match(buf, at_num_token)) {
             if (state == pass2)
@@ -69,7 +69,7 @@ int tokenize(char *buf, char *token, int *tok_type, C_INS_t *c_inst, int state) 
                 *tok_type = A_INS;
         }
             
-        strcpy(token, inst[0]);
+        strncpy(token, inst, strlen(inst));
     }
     return 0;
 }
