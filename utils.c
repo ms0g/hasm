@@ -5,14 +5,16 @@
 #include "utils.h"
 
 
-void hasm_error(const char *fmt,int severity, ...) {
+void hasm_error(const char *fmt, int severity, ...) {
     va_list args;
 
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);
     va_end(args);
     fprintf(stderr, "\n");
-    (severity == Fatal || severity == Error) ? exit(EXIT_FAILURE) : NULL;
+    if (severity == Fatal || severity == Error) {
+        exit(EXIT_FAILURE);
+    }
 }
 
 
@@ -29,7 +31,10 @@ void *hasm_malloc(size_t size) {
 FILE *hasm_fopen(const char *filename, const char *modes) {
     FILE *f;
     f = fopen(filename, modes);
-    (!f) ? hasm_error("unable to open file", Error) : NULL;
+    if (!f) {
+        hasm_error("unable to open file", Error);
+        return NULL;
+    }
     return f;
 }
 

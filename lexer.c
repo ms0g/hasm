@@ -17,11 +17,14 @@ static const char *space = "^[[:space:]]";
 
 /* Check tokens */
 static int is_label(const char *str);
-static int is_AIns(const char *str);
-static int is_CIns(const char *str);
-static int is_space(const char *str);
-static int check_match(const char *str, const char *rgx);
 
+static int is_AIns(const char *str);
+
+static int is_CIns(const char *str);
+
+static int is_space(const char *str);
+
+static int check_match(const char *str, const char *rgx);
 
 
 int tokenize(char *buf, char *token, int *tok_type, C_INS_t *c_inst, int state) {
@@ -33,7 +36,7 @@ int tokenize(char *buf, char *token, int *tok_type, C_INS_t *c_inst, int state) 
 
     if (is_CIns(buf)) {
         *tok_type = C_INS;
-        if (state==pass2) {
+        if (state == pass2) {
             if (check_match(buf, comp_dest_token)) {
                 inst = strtok(buf, "=");
                 c_inst->dest = strdup(inst);
@@ -51,27 +54,26 @@ int tokenize(char *buf, char *token, int *tok_type, C_INS_t *c_inst, int state) 
     } else if (is_label(buf)) {
         // (LOOP)
         int i = 0;
-        while (*(++buf) != ')')
-            token[i++] = *buf;
+        while (*(++buf) != ')') token[i++] = *buf;
         *tok_type = LABEL;
     } else if (is_AIns(buf)) {
         // split with @
         inst = strtok(buf, "@");
 
         if (check_match(buf, at_num_token)) {
-            if (state == pass2)
+            if (state == pass2) {
                 *tok_type = NUMBER;
-        }
-            
-        else if (check_match(buf, at_var_token))
+            }
+        } else if (check_match(buf, at_var_token))
             // if it's var(@i)
             *tok_type = A_INS;
         else {
             // if it's label(@LOOP) operand
-            if (state == pass2)
+            if (state == pass2) {
                 *tok_type = A_INS;
+            }
         }
-            
+
         strncpy(token, inst, strlen(inst));
     }
     return 0;
