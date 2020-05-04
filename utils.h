@@ -1,6 +1,8 @@
 #ifndef HASM_UTILS_H
 #define HASM_UTILS_H
 #include <stdio.h>
+#include <stdint.h>
+
 
 typedef uint8_t u8;
 typedef uint16_t u16;

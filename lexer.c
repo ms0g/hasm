@@ -31,20 +31,23 @@ int tokenize(char *buf, char *token, int *tok_type, C_INS_t *c_inst, int state) 
     if (*buf == '/' || is_space(buf))
         return -1;
 
-    if (is_CIns(buf) && state == pass2) {
-        if (check_match(buf, comp_dest_token)) {
-            inst = strtok(buf, "=");
-            c_inst->dest = strdup(inst);
-            inst = strtok(NULL, "=");
-            c_inst->comp = strdup(inst);
-        } else {
-            inst = strtok(buf, ";");
-            c_inst->comp = strdup(inst);
-            inst = strtok(NULL, ";");
-            c_inst->jmp = strdup(inst);
+    if (is_CIns(buf)) {
+        *tok_type = C_INS;
+        if (state==pass2) {
+            if (check_match(buf, comp_dest_token)) {
+                inst = strtok(buf, "=");
+                c_inst->dest = strdup(inst);
+                inst = strtok(NULL, "=");
+                c_inst->comp = strdup(inst);
+            } else {
+                inst = strtok(buf, ";");
+                c_inst->comp = strdup(inst);
+                inst = strtok(NULL, ";");
+                c_inst->jmp = strdup(inst);
+            }
         }
 
-        *tok_type = C_INS;
+
     } else if (is_label(buf)) {
         // (LOOP)
         int i = 0;
