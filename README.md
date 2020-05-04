@@ -16,5 +16,3 @@ cmake .. && cmake --build .
 Assembling process has two passes.The first pass scans source code,inserts labels and user defined variables into symbol table and creates intermediate file that doesn't include labels,spaces and comments.The second pass scans intermediate file,converts **operands** to their respective memory addresses via symbol table and **mnemonics** to equivelant machine instructions,then creates hack executable [inputfile].hex file.
 
 To run hack program, use [hvm](https://github.com/gurpinars/hvm)
-
-More information on hack assembly language [*Chapter 4-Machine Language*](http://www.nand2tetris.org/chapters/chapter%2004.pdf)
