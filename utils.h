@@ -8,7 +8,7 @@ typedef uint8_t u8;
 typedef uint16_t u16;
 
 #define read_msb(_val_) (((_val_) << 8)|((_val_) >> 8)) /* read byte MSB */
-#define STR_CMP(s1, s2, n) (strcmp(s1, s2) == 0)
+#define STR_CMP(s1, s2) (strcmp(s1, s2) == 0)
 
 #define Hasm_Free(ptr) {    \
     if (ptr != NULL) {      \
