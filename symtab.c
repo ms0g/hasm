@@ -48,7 +48,7 @@ void insert_symtab(struct Symbol **node, const char *symbol, unsigned short addr
     if (*node == NULL) {
 
         temp = (struct Symbol *) hasm_malloc(sizeof(struct Symbol));
-        strcpy(temp->operand, symbol);
+        temp->operand = strdup(symbol);
         temp->addr = addr;
         temp->left = temp->right = NULL;
 
@@ -77,5 +77,6 @@ void cleanup_symtab(struct Symbol **sym_table) {
     if (*sym_table == NULL) return;
     cleanup_symtab(&(*sym_table)->right);
     cleanup_symtab(&(*sym_table)->left);
-    free((void *)*sym_table);
+    free((*sym_table)->operand);
+    free(*sym_table);
 }

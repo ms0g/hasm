@@ -6,7 +6,7 @@
 
 /* Symbol tree */
 struct Symbol {
-    char operand[50];
+    char *operand;
     u16 addr:16;
     struct Symbol *left, *right;
 };
