@@ -1,8 +1,6 @@
 #include <string.h>
-#include <ctype.h>
 #include <stdlib.h>
 #include "parser.h"
-#include "hdr.h"
 #include "optab.h"
 #include "lexer.h"
 #include "utils.h"
@@ -26,6 +24,7 @@ void init_analysis(FILE *infp, char *file_name, struct Symbol **sym_table) {
     FILE *outfp;
     int tok_type;
 
+    memset(buff,0, BUFF);
     memset(token, 0, 100);
 
     outfp = hasm_fopen(file_name, "w");
@@ -51,14 +50,15 @@ void init_analysis(FILE *infp, char *file_name, struct Symbol **sym_table) {
                 break;
         }
 
-        // flush buffer
-        memset(token, 0, 100);
-
         if (tok_type != LABEL) {
             fprintf(outfp, "%s\n", buff);
             // increase ROM address
             ++LC;
         }
+
+        // flush buffer
+        memset(token, 0, 100);
+        memset(buff,0, BUFF);
     }
     hasm_fclose(outfp);
 }
@@ -70,8 +70,12 @@ void init_synthesis(FILE *infp, FILE *outfp, struct Symbol **sym_table) {
     struct Symbol *sym;
     int tok_type;
 
+    memset(buff,0, BUFF);
+    memset(token,0, sizeof(token));
+
     while (fgets(buff, sizeof(buff), infp) != NULL) {
         C_INS_t _inst;
+        memset(&_inst, 0, sizeof(C_INS_t));
 
         sscanf(buff, "%s", buff);
 
@@ -103,10 +107,13 @@ void init_synthesis(FILE *infp, FILE *outfp, struct Symbol **sym_table) {
         // keep byte order.Must be big-endian
         byte_buff = read_msb(byte_buff);
         hasm_fwrite(&byte_buff, sizeof(byte_buff), 1, outfp);
-        // reset buff
+
+        // flush buff
         byte_buff &= ~byte_buff;
-        
-        
+        memset(token, 0, sizeof(token));
+        memset(buff, 0, BUFF);
+
+
         Hasm_Free(_inst.comp)
         Hasm_Free(_inst.dest)
         Hasm_Free(_inst.jmp)
