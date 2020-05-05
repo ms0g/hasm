@@ -7,10 +7,11 @@
 #include "utils.h"
 #include "hdr.h"
 
-#define ADD_SUFFIX(fname, suf)   \
+#define ADD_SUFFIX(fname, suf) { \
 char *t = strrchr(fname, '.');   \
 *t = '\0';                       \
-strcat(fname, suf);
+strcat(fname, suf);              \
+}
 
 /* Symbol table */
 struct Symbol *sym_tbl = NULL;
@@ -51,11 +52,8 @@ int main(int argc, char *argv[]) {
 
     // create intermediate file
     char *intfile = argv[optind];
-    {
-        ADD_SUFFIX(intfile, ".int");
+    ADD_SUFFIX(intfile, ".int");
         
-    }
-
     // pass 1
     init_analysis(infp, intfile, &sym_tbl);
     
