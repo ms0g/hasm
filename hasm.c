@@ -21,7 +21,7 @@ FILE *infp;
 FILE *outfp;
 
 
-static void cleanup();
+static void cleanup(void);
 
 int main(int argc, char *argv[]) {
     int opt;
