@@ -1,10 +1,11 @@
+#include "lexer.h"
 #include <regex.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include "lexer.h"
-#include "utils.h"
+
+#include "optab.h"
 
 /* Tokens regex */
 static const char *at_token = "^@[[:alnum:]]";
@@ -39,14 +40,16 @@ int tokenize(char *buf, char *token, int *tok_type, C_INS_t *c_inst, int state) 
         if (state == pass2) {
             if (check_match(buf, comp_dest_token)) {
                 inst = strtok(buf, "=");
-                c_inst->dest = strdup(inst);
+                c_inst_dest_set(c_inst, inst);
+                
                 inst = strtok(NULL, "=");
-                c_inst->comp = strdup(inst);
+                c_inst_comp_set(c_inst, inst);
             } else {
                 inst = strtok(buf, ";");
-                c_inst->comp = strdup(inst);
+                c_inst_comp_set(c_inst, inst);
+                
                 inst = strtok(NULL, ";");
-                c_inst->jmp = strdup(inst);
+                c_inst_jmp_set(c_inst, inst);
             }
         }
 
@@ -111,3 +114,30 @@ static int is_AIns(const char *str) {
 static int is_CIns(const char *str) {
     return check_match(str, comp_dest_token) || check_match(str, comp_jmp_token);
 }
+
+
+u16 c_inst_dest_get(C_INS_t *inst) {
+    return scan_opc(inst->dest, hasm_dest);
+}
+
+u16 c_inst_comp_get(C_INS_t *inst) {
+    return scan_opc(inst->comp, hasm_comp);
+}
+
+u16 c_inst_jmp_get(C_INS_t *inst) {
+    return scan_opc(inst->jmp, hasm_jmp);
+}
+
+
+void c_inst_dest_set(C_INS_t *inst, char *token) {
+     inst->dest = strdup(token);
+}
+
+void c_inst_comp_set(C_INS_t *inst, char *token){
+    inst->comp = strdup(token);
+}
+
+void c_inst_jmp_set(C_INS_t *inst, char *token){
+    inst->jmp = strdup(token);
+}
+

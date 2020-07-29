@@ -1,5 +1,5 @@
-#include <string.h>
 #include "optab.h"
+#include <string.h>
 #include "hopcodes.h"
 
 

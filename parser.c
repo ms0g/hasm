@@ -1,9 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "parser.h"
-#include "optab.h"
 #include "lexer.h"
-#include "utils.h"
 
 #define BUFF 1080
 
@@ -91,13 +89,15 @@ void init_synthesis(FILE *infp, FILE *outfp, struct Symbol **sym_table) {
                 }
                 break;
             case C_INS:
-                dest = scan_opc(_inst.dest, hasm_dest);
-                comp = scan_opc(_inst.comp, hasm_comp);
-                jmp = scan_opc(_inst.jmp, hasm_jmp);
+                dest = c_inst_dest_get(&_inst);
+                comp = c_inst_comp_get(&_inst);
+                jmp = c_inst_jmp_get(&_inst);
+                
                 if (dest && comp) {
                     byte_buff |= dest << 3 | comp << 6;
-                } else
+                } else {
                     byte_buff |= comp << 6 | jmp;
+                }
                 break;
             case NUMBER:
                 byte_buff |= (u16) atoi(token);
